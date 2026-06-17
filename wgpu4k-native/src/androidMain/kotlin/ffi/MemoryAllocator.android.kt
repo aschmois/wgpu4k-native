@@ -1,7 +1,7 @@
 package ffi
 
-import java.lang.foreign.SegmentAllocator
-import java.lang.foreign.ValueLayout
+import ffi.foreign.SegmentAllocator
+import ffi.foreign.ValueLayout
 
 actual class MemoryAllocator : AutoCloseable {
 

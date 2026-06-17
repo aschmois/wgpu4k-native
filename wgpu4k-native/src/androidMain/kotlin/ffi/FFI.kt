@@ -2,8 +2,8 @@ package ffi
 
 import com.sun.jna.Memory
 import com.sun.jna.Pointer
-import java.lang.foreign.NativeString
-import java.lang.foreign.ValueLayout
+import ffi.foreign.NativeString
+import ffi.foreign.ValueLayout
 
 val C_BOOL: ValueLayout = ValueLayout.JAVA_BOOLEAN
 val C_CHAR: ValueLayout = ValueLayout.JAVA_BYTE
