@@ -14,7 +14,7 @@ import ffi.C_DOUBLE
 import ffi.CStructure
 import ffi.MemoryAllocator
 import ffi.toAddress
-import java.lang.foreign.AddressLayout
+import ffi.foreign.AddressLayout
 
 actual interface WGPUStringView {
 

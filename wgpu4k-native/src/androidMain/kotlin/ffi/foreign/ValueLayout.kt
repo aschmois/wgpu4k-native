@@ -1,4 +1,4 @@
-package java.lang.foreign
+package ffi.foreign
 
 /**
  * @suppress
