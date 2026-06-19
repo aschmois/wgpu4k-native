@@ -1,25 +1,31 @@
 rootProject.name = "wgpu4k-native-root"
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
-	includeBuild("generator")
-	repositories {
-		gradlePluginPortal()
-		google()
-		mavenCentral()
-	}
+  includeBuild("generator")
+  repositories {
+    gradlePluginPortal()
+    google()
+    mavenCentral()
+  }
 }
 
 dependencyResolutionManagement {
-	repositories {
-		google()
-		mavenCentral()
-	}
+  repositories {
+    google()
+    mavenCentral()
+  }
 }
 
 include("wgpu4k-native")
+
 include("wgpu4k-native-specs")
+
 include("demo:common")
+
 include("demo:desktop-and-ios")
+
 include("demo:android")
+
 include("demo:android-native")

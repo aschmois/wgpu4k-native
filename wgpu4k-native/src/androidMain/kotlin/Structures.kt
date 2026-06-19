@@ -2682,7 +2682,13 @@ sealed class WGPUInstanceExtras(pointer: com.sun.jna.Pointer? = null) : com.sun.
 	@JvmField var dx12PresentationSystem: Int = 0
 	@JvmField var budgetForDeviceCreation: com.sun.jna.Pointer? = null
 	@JvmField var budgetForDeviceLoss: com.sun.jna.Pointer? = null
-	override fun getFieldOrder() = listOf("chain", "backends", "flags", "dx12ShaderCompiler", "gles3MinorVersion", "glFenceBehaviour", "dxcPath", "dxcMaxShaderModel", "dx12PresentationSystem", "budgetForDeviceCreation", "budgetForDeviceLoss")
+	// v29 added WGPUNativeDisplayHandle displayHandle { type; union{xlib,xcb,wayland} } (24 bytes).
+	// The generator skipped it (union-containing nested struct), undersizing the struct. Represent
+	// it as raw fields so the struct size matches the native ABI; zeroed => type=None (no handle).
+	@JvmField var displayHandleType: Int = 0
+	@JvmField var displayHandleConnection: com.sun.jna.Pointer? = null
+	@JvmField var displayHandleScreen: Int = 0
+	override fun getFieldOrder() = listOf("chain", "backends", "flags", "dx12ShaderCompiler", "gles3MinorVersion", "glFenceBehaviour", "dxcPath", "dxcMaxShaderModel", "dx12PresentationSystem", "budgetForDeviceCreation", "budgetForDeviceLoss", "displayHandleType", "displayHandleConnection", "displayHandleScreen")
 
 	class ByReference(pointer: com.sun.jna.Pointer? = null) : WGPUInstanceExtras(pointer), com.sun.jna.Structure.ByReference {
 		constructor(other: WGPUInstanceExtras) : this(other.pointer) {

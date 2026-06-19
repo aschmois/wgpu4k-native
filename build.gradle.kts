@@ -1,14 +1,10 @@
-
 allprojects {
+  repositories {
+    mavenLocal()
+    google()
+    mavenCentral()
+  }
 
-	repositories {
-		mavenLocal()
-		google()
-		mavenCentral()
-	}
-
-	group = "io.ygdrasil"
-	version = System.getenv("VERSION")?.takeIf { it.isNotBlank() } ?: "v27.0.4-SNAPSHOT"
+  group = "cool.avocado"
+  version = System.getenv("VERSION")?.takeIf { it.isNotBlank() } ?: "v29.0.0-SNAPSHOT"
 }
-
-

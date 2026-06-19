@@ -1,14 +1,8 @@
 plugins {
-    `kotlin-multiplatform`
-    publish
+  `kotlin-multiplatform`
+  publish
 }
 
-kotlin {
-    jvm()
-}
+kotlin { jvm() }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
-}
+java { toolchain { languageVersion = JavaLanguageVersion.of(25) } }

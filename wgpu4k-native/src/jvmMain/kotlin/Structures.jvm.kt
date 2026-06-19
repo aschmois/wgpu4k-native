@@ -5849,15 +5849,15 @@ actual interface WGPUInstanceExtras : CStructure {
 		}
 
 		actual fun allocate(allocator: MemoryAllocator): WGPUInstanceExtras {
-			return allocator.allocate(88L)
+			return allocator.allocate(112L)
 				.let { WGPUInstanceExtras(it) }
 		}
 
 		actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt,  WGPUInstanceExtras) -> Unit): ArrayHolder<WGPUInstanceExtras> {
-			return allocator.allocate(88 * size.toLong())
+			return allocator.allocate(112 * size.toLong())
 				.also {
 					(0u until size).forEach { index ->
-						it.handler.asSlice(index.toLong() * 88L)
+						it.handler.asSlice(index.toLong() * 112L)
 							.let(::NativeAddress)
 							.let { WGPUInstanceExtras(it) }
 							.let { provider(index, it) }
