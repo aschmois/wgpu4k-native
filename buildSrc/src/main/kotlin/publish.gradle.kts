@@ -29,7 +29,9 @@ project.centralPortalPublish {
 val javadocJar by
   tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
-    from(tasks.findByName("dokkaHtml"))
+    // Dokka V1 `dokkaHtml` is incompatible with the V2 mode this project enables, so ship a
+    // manifest-only javadoc jar to satisfy Maven Central's "must include javadoc" requirement.
+    // A proper Dokka V2 migration (`dokkaGeneratePublicationHtml`) can restore rendered docs later.
   }
 
 publishing {
