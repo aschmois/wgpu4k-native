@@ -8,7 +8,7 @@ plugins {
 }
 
 val libraryDescription = "wgpu4k kotlin native binding."
-val projectHomepage = "https://github.com/wgpu4k/wgpu4k-native"
+val projectHomepage = "https://github.com/aschmois/wgpu4k-native"
 val dokkaHtml = tasks.named("dokkaGeneratePublicationHtml")
 
 mavenPublishing {
@@ -40,6 +40,10 @@ mavenPublishing {
             developer {
                 id.set("amommers")
                 name.set("Alexandre Mommers")
+            }
+            developer {
+                id.set("aschmois")
+                name.set("Andres Schmois")
             }
         }
         scm {
