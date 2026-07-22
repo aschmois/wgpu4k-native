@@ -7743,6 +7743,11 @@ actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePas
     return
 }
 
+actual fun wgpuComputePassEncoderSetImmediates(computePassEncoder: WGPUComputePassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    webgpu.native.wgpuComputePassEncoderSetImmediates(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), offset, data?.pointer?.takeIf { data.rawValue != 0L }, size)
+    return
+}
+
 actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit {
     webgpu.native.wgpuComputePassEncoderSetLabel(computePassEncoder?.handler?.pointer?.takeIf { computePassEncoder.handler.rawValue != 0L }?.reinterpret(), label.toCValue())
     return
@@ -8079,6 +8084,11 @@ actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBu
     return
 }
 
+actual fun wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder: WGPURenderBundleEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    webgpu.native.wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), offset, data?.pointer?.takeIf { data.rawValue != 0L }, size)
+    return
+}
+
 actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
     webgpu.native.wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder?.handler?.pointer?.takeIf { renderBundleEncoder.handler.rawValue != 0L }?.reinterpret(), buffer?.handler?.pointer?.takeIf { buffer.handler.rawValue != 0L }?.reinterpret(), format, offset, size)
     return
@@ -8171,6 +8181,11 @@ actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEn
 
 actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
     webgpu.native.wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), color?.handler?.pointer?.takeIf { color.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetImmediates(renderPassEncoder: WGPURenderPassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    webgpu.native.wgpuRenderPassEncoderSetImmediates(renderPassEncoder?.handler?.pointer?.takeIf { renderPassEncoder.handler.rawValue != 0L }?.reinterpret(), offset, data?.pointer?.takeIf { data.rawValue != 0L }, size)
     return
 }
 
@@ -8888,9 +8903,10 @@ fun WGPUDeviceExtras.toCValue(): CValue<webgpu.native.WGPUDeviceExtras> = cValue
 
 actual interface WGPUNativeLimits {
     actual var chain: WGPUChainedStruct
-    actual var maxImmediateSize: UInt
     actual var maxNonSamplerBindings: UInt
     actual var maxBindingArrayElementsPerShaderStage: UInt
+    actual var maxBindingArraySamplerElementsPerShaderStage: UInt
+    actual var maxMultiviewViewCount: UInt
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUNativeLimits = ByReference(address)
@@ -8915,14 +8931,17 @@ actual interface WGPUNativeLimits {
         override var chain: WGPUChainedStruct
             get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
             set(value) { error("Setters not supported on ByValue") }
-        override var maxImmediateSize: UInt
-            get() = handle.useContents { this.maxImmediateSize }
-            set(value) { error("Setters not supported on ByValue") }
         override var maxNonSamplerBindings: UInt
             get() = handle.useContents { this.maxNonSamplerBindings }
             set(value) { error("Setters not supported on ByValue") }
         override var maxBindingArrayElementsPerShaderStage: UInt
             get() = handle.useContents { this.maxBindingArrayElementsPerShaderStage }
+            set(value) { error("Setters not supported on ByValue") }
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
+            get() = handle.useContents { this.maxBindingArraySamplerElementsPerShaderStage }
+            set(value) { error("Setters not supported on ByValue") }
+        override var maxMultiviewViewCount: UInt
+            get() = handle.useContents { this.maxMultiviewViewCount }
             set(value) { error("Setters not supported on ByValue") }
         }
     
@@ -8940,15 +8959,18 @@ actual interface WGPUNativeLimits {
                     destBytes[i.toInt()] = srcBytes[i.toInt()]
                 }
             }
-        override var maxImmediateSize: UInt
-            get() = struct.maxImmediateSize
-            set(value) { struct.maxImmediateSize = value }
         override var maxNonSamplerBindings: UInt
             get() = struct.maxNonSamplerBindings
             set(value) { struct.maxNonSamplerBindings = value }
         override var maxBindingArrayElementsPerShaderStage: UInt
             get() = struct.maxBindingArrayElementsPerShaderStage
             set(value) { struct.maxBindingArrayElementsPerShaderStage = value }
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
+            get() = struct.maxBindingArraySamplerElementsPerShaderStage
+            set(value) { struct.maxBindingArraySamplerElementsPerShaderStage = value }
+        override var maxMultiviewViewCount: UInt
+            get() = struct.maxMultiviewViewCount
+            set(value) { struct.maxMultiviewViewCount = value }
     }
 }
 
@@ -8959,71 +8981,10 @@ fun WGPUNativeLimits.toCValue(): CValue<webgpu.native.WGPUNativeLimits> = cValue
     for (i in 0L until size_chain) {
         dest_chain[i.toInt()] = src_chain[i.toInt()]
     }
-    this.maxImmediateSize = this@toCValue.maxImmediateSize
     this.maxNonSamplerBindings = this@toCValue.maxNonSamplerBindings
     this.maxBindingArrayElementsPerShaderStage = this@toCValue.maxBindingArrayElementsPerShaderStage
-}
-
-actual interface WGPUPipelineLayoutExtras {
-    actual var chain: WGPUChainedStruct
-    actual var immediateDataSize: UInt
-    actual val handler: NativeAddress
-    actual companion object {
-        actual operator fun invoke(address: NativeAddress): WGPUPipelineLayoutExtras = ByReference(address)
-        actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutExtras =
-            ByReference(allocator.allocate(sizeOf<webgpu.native.WGPUPipelineLayoutExtras>().toLong()))
-        
-        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPipelineLayoutExtras) -> Unit): ArrayHolder<WGPUPipelineLayoutExtras> {
-            val byteSize = sizeOf<webgpu.native.WGPUPipelineLayoutExtras>().toLong()
-            val segment = allocator.allocate(byteSize * size.toLong())
-            for (i in 0 until size.toInt()) {
-                val rawAddr = segment.rawValue + i.toLong() * byteSize
-                provider(i.toUInt(), ByReference(NativeAddress(rawAddr)))
-            }
-            return ArrayHolder(segment)
-        }
-    }
-    
-        value class ByValue(val handle: CValue<webgpu.native.WGPUPipelineLayoutExtras>) : WGPUPipelineLayoutExtras {
-        override val handler: NativeAddress
-            get() = error("should not be call on CValue")
-        
-        override var chain: WGPUChainedStruct
-            get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
-            set(value) { error("Setters not supported on ByValue") }
-        override var immediateDataSize: UInt
-            get() = handle.useContents { this.immediateDataSize }
-            set(value) { error("Setters not supported on ByValue") }
-        }
-    
-    class ByReference(override val handler: NativeAddress) : WGPUPipelineLayoutExtras {
-        private val struct: webgpu.native.WGPUPipelineLayoutExtras
-            get() = handler.pointer.reinterpret<webgpu.native.WGPUPipelineLayoutExtras>().pointed
-        
-        override var chain: WGPUChainedStruct
-            get() = WGPUChainedStruct.ByReference(NativeAddress(struct.chain.ptr))
-            set(value) {
-                val destBytes = struct.chain.ptr.reinterpret<ByteVar>()
-                val srcBytes = value.handler.pointer.reinterpret<ByteVar>()
-                val byteSize = sizeOf<webgpu.native.WGPUChainedStruct>().toLong()
-                for (i in 0L until byteSize) {
-                    destBytes[i.toInt()] = srcBytes[i.toInt()]
-                }
-            }
-        override var immediateDataSize: UInt
-            get() = struct.immediateDataSize
-            set(value) { struct.immediateDataSize = value }
-    }
-}
-
-fun WGPUPipelineLayoutExtras.toCValue(): CValue<webgpu.native.WGPUPipelineLayoutExtras> = cValue {
-    val dest_chain = this.chain.ptr.reinterpret<ByteVar>()
-    val src_chain = this@toCValue.chain.handler.pointer.reinterpret<ByteVar>()
-    val size_chain = sizeOf<webgpu.native.WGPUChainedStruct>().toLong()
-    for (i in 0L until size_chain) {
-        dest_chain[i.toInt()] = src_chain[i.toInt()]
-    }
-    this.immediateDataSize = this@toCValue.immediateDataSize
+    this.maxBindingArraySamplerElementsPerShaderStage = this@toCValue.maxBindingArraySamplerElementsPerShaderStage
+    this.maxMultiviewViewCount = this@toCValue.maxMultiviewViewCount
 }
 
 actual interface WGPUShaderDefine {
@@ -10260,6 +10221,142 @@ fun WGPUPrimitiveStateExtras.toCValue(): CValue<webgpu.native.WGPUPrimitiveState
     this.conservative = this@toCValue.conservative
 }
 
+actual interface WGPUImageSubresourceRange {
+    actual var aspect: WGPUTextureAspect
+    actual var baseMipLevel: UInt
+    actual var mipLevelCount: UInt
+    actual var baseArrayLayer: UInt
+    actual var arrayLayerCount: UInt
+    actual val handler: NativeAddress
+    actual companion object {
+        actual operator fun invoke(address: NativeAddress): WGPUImageSubresourceRange = ByReference(address)
+        actual fun allocate(allocator: MemoryAllocator): WGPUImageSubresourceRange =
+            ByReference(allocator.allocate(sizeOf<webgpu.native.WGPUImageSubresourceRange>().toLong()))
+        
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageSubresourceRange) -> Unit): ArrayHolder<WGPUImageSubresourceRange> {
+            val byteSize = sizeOf<webgpu.native.WGPUImageSubresourceRange>().toLong()
+            val segment = allocator.allocate(byteSize * size.toLong())
+            for (i in 0 until size.toInt()) {
+                val rawAddr = segment.rawValue + i.toLong() * byteSize
+                provider(i.toUInt(), ByReference(NativeAddress(rawAddr)))
+            }
+            return ArrayHolder(segment)
+        }
+    }
+    
+        value class ByValue(val handle: CValue<webgpu.native.WGPUImageSubresourceRange>) : WGPUImageSubresourceRange {
+        override val handler: NativeAddress
+            get() = error("should not be call on CValue")
+        
+        override var aspect: WGPUTextureAspect
+            get() = handle.useContents { this.aspect as WGPUTextureAspect }
+            set(value) { error("Setters not supported on ByValue") }
+        override var baseMipLevel: UInt
+            get() = handle.useContents { this.baseMipLevel }
+            set(value) { error("Setters not supported on ByValue") }
+        override var mipLevelCount: UInt
+            get() = handle.useContents { this.mipLevelCount }
+            set(value) { error("Setters not supported on ByValue") }
+        override var baseArrayLayer: UInt
+            get() = handle.useContents { this.baseArrayLayer }
+            set(value) { error("Setters not supported on ByValue") }
+        override var arrayLayerCount: UInt
+            get() = handle.useContents { this.arrayLayerCount }
+            set(value) { error("Setters not supported on ByValue") }
+        }
+    
+    class ByReference(override val handler: NativeAddress) : WGPUImageSubresourceRange {
+        private val struct: webgpu.native.WGPUImageSubresourceRange
+            get() = handler.pointer.reinterpret<webgpu.native.WGPUImageSubresourceRange>().pointed
+        
+        override var aspect: WGPUTextureAspect
+            get() = struct.aspect as WGPUTextureAspect
+            set(value) { struct.aspect = value }
+        override var baseMipLevel: UInt
+            get() = struct.baseMipLevel
+            set(value) { struct.baseMipLevel = value }
+        override var mipLevelCount: UInt
+            get() = struct.mipLevelCount
+            set(value) { struct.mipLevelCount = value }
+        override var baseArrayLayer: UInt
+            get() = struct.baseArrayLayer
+            set(value) { struct.baseArrayLayer = value }
+        override var arrayLayerCount: UInt
+            get() = struct.arrayLayerCount
+            set(value) { struct.arrayLayerCount = value }
+    }
+}
+
+fun WGPUImageSubresourceRange.toCValue(): CValue<webgpu.native.WGPUImageSubresourceRange> = cValue {
+    this.aspect = this@toCValue.aspect
+    this.baseMipLevel = this@toCValue.baseMipLevel
+    this.mipLevelCount = this@toCValue.mipLevelCount
+    this.baseArrayLayer = this@toCValue.baseArrayLayer
+    this.arrayLayerCount = this@toCValue.arrayLayerCount
+}
+
+actual interface WGPUSamplerDescriptorExtras {
+    actual var chain: WGPUChainedStruct
+    actual var samplerBorderColor: WGPUSamplerBorderColor
+    actual val handler: NativeAddress
+    actual companion object {
+        actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptorExtras = ByReference(address)
+        actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptorExtras =
+            ByReference(allocator.allocate(sizeOf<webgpu.native.WGPUSamplerDescriptorExtras>().toLong()))
+        
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerDescriptorExtras) -> Unit): ArrayHolder<WGPUSamplerDescriptorExtras> {
+            val byteSize = sizeOf<webgpu.native.WGPUSamplerDescriptorExtras>().toLong()
+            val segment = allocator.allocate(byteSize * size.toLong())
+            for (i in 0 until size.toInt()) {
+                val rawAddr = segment.rawValue + i.toLong() * byteSize
+                provider(i.toUInt(), ByReference(NativeAddress(rawAddr)))
+            }
+            return ArrayHolder(segment)
+        }
+    }
+    
+        value class ByValue(val handle: CValue<webgpu.native.WGPUSamplerDescriptorExtras>) : WGPUSamplerDescriptorExtras {
+        override val handler: NativeAddress
+            get() = error("should not be call on CValue")
+        
+        override var chain: WGPUChainedStruct
+            get() = handle.useContents { WGPUChainedStruct.ByReference(NativeAddress(this.chain.ptr)) }
+            set(value) { error("Setters not supported on ByValue") }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = handle.useContents { this.samplerBorderColor as WGPUSamplerBorderColor }
+            set(value) { error("Setters not supported on ByValue") }
+        }
+    
+    class ByReference(override val handler: NativeAddress) : WGPUSamplerDescriptorExtras {
+        private val struct: webgpu.native.WGPUSamplerDescriptorExtras
+            get() = handler.pointer.reinterpret<webgpu.native.WGPUSamplerDescriptorExtras>().pointed
+        
+        override var chain: WGPUChainedStruct
+            get() = WGPUChainedStruct.ByReference(NativeAddress(struct.chain.ptr))
+            set(value) {
+                val destBytes = struct.chain.ptr.reinterpret<ByteVar>()
+                val srcBytes = value.handler.pointer.reinterpret<ByteVar>()
+                val byteSize = sizeOf<webgpu.native.WGPUChainedStruct>().toLong()
+                for (i in 0L until byteSize) {
+                    destBytes[i.toInt()] = srcBytes[i.toInt()]
+                }
+            }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = struct.samplerBorderColor as WGPUSamplerBorderColor
+            set(value) { struct.samplerBorderColor = value }
+    }
+}
+
+fun WGPUSamplerDescriptorExtras.toCValue(): CValue<webgpu.native.WGPUSamplerDescriptorExtras> = cValue {
+    val dest_chain = this.chain.ptr.reinterpret<ByteVar>()
+    val src_chain = this@toCValue.chain.handler.pointer.reinterpret<ByteVar>()
+    val size_chain = sizeOf<webgpu.native.WGPUChainedStruct>().toLong()
+    for (i in 0L until size_chain) {
+        dest_chain[i.toInt()] = src_chain[i.toInt()]
+    }
+    this.samplerBorderColor = this@toCValue.samplerBorderColor
+}
+
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
     webgpu.native.wgpuGenerateReport(instance?.handler?.pointer?.takeIf { instance.handler.rawValue != 0L }?.reinterpret(), report?.handler?.pointer?.takeIf { report.handler.rawValue != 0L }?.reinterpret())
     return
@@ -10309,21 +10406,6 @@ actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress
 
 actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
     return webgpu.native.wgpuTextureGetNativeMetalTexture(texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret())?.let(::NativeAddress)
-}
-
-actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    webgpu.native.wgpuRenderPassEncoderSetImmediates(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), offset, sizeBytes, data?.pointer?.takeIf { data.rawValue != 0L })
-    return
-}
-
-actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    webgpu.native.wgpuComputePassEncoderSetImmediates(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), offset, sizeBytes, data?.pointer?.takeIf { data.rawValue != 0L })
-    return
-}
-
-actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    webgpu.native.wgpuRenderBundleEncoderSetImmediates(encoder?.handler?.pointer?.takeIf { encoder.handler.rawValue != 0L }?.reinterpret(), offset, sizeBytes, data?.pointer?.takeIf { data.rawValue != 0L })
-    return
 }
 
 actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
@@ -10383,6 +10465,15 @@ actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt {
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     webgpu.native.wgpuDeviceStopGraphicsDebuggerCapture(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret())
     return
+}
+
+actual fun wgpuCommandEncoderClearTexture(commandEncoder: WGPUCommandEncoder?, texture: WGPUTexture?, range: WGPUImageSubresourceRange?): Unit {
+    webgpu.native.wgpuCommandEncoderClearTexture(commandEncoder?.handler?.pointer?.takeIf { commandEncoder.handler.rawValue != 0L }?.reinterpret(), texture?.handler?.pointer?.takeIf { texture.handler.rawValue != 0L }?.reinterpret(), range?.handler?.pointer?.takeIf { range.handler.rawValue != 0L }?.reinterpret())
+    return
+}
+
+actual fun wgpuDeviceCreateShaderModuleTrusted(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?, runtimeChecks: ULong): WGPUShaderModule? {
+    return webgpu.native.wgpuDeviceCreateShaderModuleTrusted(device?.handler?.pointer?.takeIf { device.handler.rawValue != 0L }?.reinterpret(), descriptor?.handler?.pointer?.takeIf { descriptor.handler.rawValue != 0L }?.reinterpret(), runtimeChecks)?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 }
 
 @OptIn(CallbackRuntimeApi::class)

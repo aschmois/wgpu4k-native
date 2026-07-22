@@ -35,7 +35,7 @@ mavenPublishing {
     pom {
         name.set(project.name)
         description.set(libraryDescription)
-        url.set("https://github.com/wgpu4k/wgpu4k-native")
+        url.set("https://github.com/aschmois/wgpu4k-native")
         inceptionYear.set("2024")
         licenses {
             license {
@@ -48,11 +48,15 @@ mavenPublishing {
                 id.set("amommers")
                 name.set("Alexandre Mommers")
             }
+            developer {
+                id.set("aschmois")
+                name.set("Andres Schmois")
+            }
         }
         scm {
-            connection.set("scm:git:https://github.com/wgpu4k/wgpu4k-native.git")
-            developerConnection.set("scm:git:https://github.com/wgpu4k/wgpu4k-native.git")
-            url.set("https://github.com/wgpu4k/wgpu4k-native")
+            connection.set("scm:git:https://github.com/aschmois/wgpu4k-native.git")
+            developerConnection.set("scm:git:https://github.com/aschmois/wgpu4k-native.git")
+            url.set("https://github.com/aschmois/wgpu4k-native")
         }
     }
 }

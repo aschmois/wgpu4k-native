@@ -8227,6 +8227,11 @@ actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePas
     return
 }
 
+actual fun wgpuComputePassEncoderSetImmediates(computePassEncoder: WGPUComputePassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderSetImmediates(computePassEncoder?.handler, offset.toInt(), data, size.toLong())
+    return
+}
+
 actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit {
     io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderSetLabel(computePassEncoder?.handler, io.ygdrasil.wgpu.android.WGPUStringView.ByValue(label.handler).apply { read() })
     return
@@ -8563,6 +8568,11 @@ actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBu
     return
 }
 
+actual fun wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder: WGPURenderBundleEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder?.handler, offset.toInt(), data, size.toLong())
+    return
+}
+
 actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
     io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder?.handler, buffer?.handler, format.toInt(), offset.toLong(), size.toLong())
     return
@@ -8655,6 +8665,11 @@ actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEn
 
 actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
     io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder?.handler, color?.handler)
+    return
+}
+
+actual fun wgpuRenderPassEncoderSetImmediates(renderPassEncoder: WGPURenderPassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetImmediates(renderPassEncoder?.handler, offset.toInt(), data, size.toLong())
     return
 }
 
@@ -9456,9 +9471,10 @@ actual interface WGPUDeviceExtras {
 
 actual interface WGPUNativeLimits {
     actual var chain: WGPUChainedStruct
-    actual var maxImmediateSize: UInt
     actual var maxNonSamplerBindings: UInt
     actual var maxBindingArrayElementsPerShaderStage: UInt
+    actual var maxBindingArraySamplerElementsPerShaderStage: UInt
+    actual var maxMultiviewViewCount: UInt
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUNativeLimits {
@@ -9494,15 +9510,18 @@ actual interface WGPUNativeLimits {
                 handle.chain.pointer.write(0, bytes, 0, bytes.size)
                 handle.readField("chain")
             }
-        override var maxImmediateSize: UInt
-            get() = handle.maxImmediateSize.toUInt() as UInt
-            set(value) { handle.maxImmediateSize = value.toInt() }
         override var maxNonSamplerBindings: UInt
             get() = handle.maxNonSamplerBindings.toUInt() as UInt
             set(value) { handle.maxNonSamplerBindings = value.toInt() }
         override var maxBindingArrayElementsPerShaderStage: UInt
             get() = handle.maxBindingArrayElementsPerShaderStage.toUInt() as UInt
             set(value) { handle.maxBindingArrayElementsPerShaderStage = value.toInt() }
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
+            get() = handle.maxBindingArraySamplerElementsPerShaderStage.toUInt() as UInt
+            set(value) { handle.maxBindingArraySamplerElementsPerShaderStage = value.toInt() }
+        override var maxMultiviewViewCount: UInt
+            get() = handle.maxMultiviewViewCount.toUInt() as UInt
+            set(value) { handle.maxMultiviewViewCount = value.toInt() }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -9522,86 +9541,18 @@ actual interface WGPUNativeLimits {
                 handle.chain.pointer.write(0, bytes, 0, bytes.size)
                 handle.readField("chain")
             }
-        override var maxImmediateSize: UInt
-            get() = handle.maxImmediateSize.toUInt() as UInt
-            set(value) { handle.maxImmediateSize = value.toInt() }
         override var maxNonSamplerBindings: UInt
             get() = handle.maxNonSamplerBindings.toUInt() as UInt
             set(value) { handle.maxNonSamplerBindings = value.toInt() }
         override var maxBindingArrayElementsPerShaderStage: UInt
             get() = handle.maxBindingArrayElementsPerShaderStage.toUInt() as UInt
             set(value) { handle.maxBindingArrayElementsPerShaderStage = value.toInt() }
-        override val handler: NativeAddress
-            get() {
-                handle.write()
-                return handle.pointer
-            }
-    }
-}
-
-actual interface WGPUPipelineLayoutExtras {
-    actual var chain: WGPUChainedStruct
-    actual var immediateDataSize: UInt
-    actual val handler: NativeAddress
-    actual companion object {
-        actual operator fun invoke(address: NativeAddress): WGPUPipelineLayoutExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByReference(address))
-        }
-        
-        actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutExtras {
-            val ref = io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByReference()
-            allocator.register(ref)
-            return ByReference(ref)
-        }
-        
-        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPipelineLayoutExtras) -> Unit): ArrayHolder<WGPUPipelineLayoutExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByValue()
-            val array = ref.toArray(size.toInt())
-            array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByValue))
-            }
-            val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
-            return ArrayHolder(pointer)
-        }
-    }
-    
-    class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByReference = io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUPipelineLayoutExtras {
-        override var chain: WGPUChainedStruct
-            get() {
-                handle.readField("chain")
-                return WGPUChainedStruct.ByValue(handle.chain)
-            }
-            set(value) {
-                val bytes = value.handler.getByteArray(0, handle.chain.size())
-                handle.readField("chain")
-                handle.chain.pointer.write(0, bytes, 0, bytes.size)
-                handle.readField("chain")
-            }
-        override var immediateDataSize: UInt
-            get() = handle.immediateDataSize.toUInt() as UInt
-            set(value) { handle.immediateDataSize = value.toInt() }
-        override val handler: NativeAddress
-            get() {
-                handle.write()
-                return handle.pointer
-            }
-    }
-    
-    class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByValue = io.ygdrasil.wgpu.android.WGPUPipelineLayoutExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUPipelineLayoutExtras {
-        override var chain: WGPUChainedStruct
-            get() {
-                handle.readField("chain")
-                return WGPUChainedStruct.ByValue(handle.chain)
-            }
-            set(value) {
-                val bytes = value.handler.getByteArray(0, handle.chain.size())
-                handle.readField("chain")
-                handle.chain.pointer.write(0, bytes, 0, bytes.size)
-                handle.readField("chain")
-            }
-        override var immediateDataSize: UInt
-            get() = handle.immediateDataSize.toUInt() as UInt
-            set(value) { handle.immediateDataSize = value.toInt() }
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
+            get() = handle.maxBindingArraySamplerElementsPerShaderStage.toUInt() as UInt
+            set(value) { handle.maxBindingArraySamplerElementsPerShaderStage = value.toInt() }
+        override var maxMultiviewViewCount: UInt
+            get() = handle.maxMultiviewViewCount.toUInt() as UInt
+            set(value) { handle.maxMultiviewViewCount = value.toInt() }
         override val handler: NativeAddress
             get() {
                 handle.write()
@@ -11001,6 +10952,153 @@ actual interface WGPUPrimitiveStateExtras {
     }
 }
 
+actual interface WGPUImageSubresourceRange {
+    actual var aspect: WGPUTextureAspect
+    actual var baseMipLevel: UInt
+    actual var mipLevelCount: UInt
+    actual var baseArrayLayer: UInt
+    actual var arrayLayerCount: UInt
+    actual val handler: NativeAddress
+    actual companion object {
+        actual operator fun invoke(address: NativeAddress): WGPUImageSubresourceRange {
+            return ByReference(io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByReference(address))
+        }
+        
+        actual fun allocate(allocator: MemoryAllocator): WGPUImageSubresourceRange {
+            val ref = io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByReference()
+            allocator.register(ref)
+            return ByReference(ref)
+        }
+        
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageSubresourceRange) -> Unit): ArrayHolder<WGPUImageSubresourceRange> {
+            val ref = io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue()
+            val array = ref.toArray(size.toInt())
+            array.forEachIndexed { index, struct ->
+                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue))
+            }
+            val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
+            return ArrayHolder(pointer)
+        }
+    }
+    
+    class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByReference = io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByReference(com.sun.jna.Pointer.NULL)) : WGPUImageSubresourceRange {
+        override var aspect: WGPUTextureAspect
+            get() = handle.aspect.toUInt() as WGPUTextureAspect
+            set(value) { handle.aspect = value.toInt() }
+        override var baseMipLevel: UInt
+            get() = handle.baseMipLevel.toUInt() as UInt
+            set(value) { handle.baseMipLevel = value.toInt() }
+        override var mipLevelCount: UInt
+            get() = handle.mipLevelCount.toUInt() as UInt
+            set(value) { handle.mipLevelCount = value.toInt() }
+        override var baseArrayLayer: UInt
+            get() = handle.baseArrayLayer.toUInt() as UInt
+            set(value) { handle.baseArrayLayer = value.toInt() }
+        override var arrayLayerCount: UInt
+            get() = handle.arrayLayerCount.toUInt() as UInt
+            set(value) { handle.arrayLayerCount = value.toInt() }
+        override val handler: NativeAddress
+            get() {
+                handle.write()
+                return handle.pointer
+            }
+    }
+    
+    class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue = io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue(com.sun.jna.Pointer.NULL)) : WGPUImageSubresourceRange {
+        override var aspect: WGPUTextureAspect
+            get() = handle.aspect.toUInt() as WGPUTextureAspect
+            set(value) { handle.aspect = value.toInt() }
+        override var baseMipLevel: UInt
+            get() = handle.baseMipLevel.toUInt() as UInt
+            set(value) { handle.baseMipLevel = value.toInt() }
+        override var mipLevelCount: UInt
+            get() = handle.mipLevelCount.toUInt() as UInt
+            set(value) { handle.mipLevelCount = value.toInt() }
+        override var baseArrayLayer: UInt
+            get() = handle.baseArrayLayer.toUInt() as UInt
+            set(value) { handle.baseArrayLayer = value.toInt() }
+        override var arrayLayerCount: UInt
+            get() = handle.arrayLayerCount.toUInt() as UInt
+            set(value) { handle.arrayLayerCount = value.toInt() }
+        override val handler: NativeAddress
+            get() {
+                handle.write()
+                return handle.pointer
+            }
+    }
+}
+
+actual interface WGPUSamplerDescriptorExtras {
+    actual var chain: WGPUChainedStruct
+    actual var samplerBorderColor: WGPUSamplerBorderColor
+    actual val handler: NativeAddress
+    actual companion object {
+        actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptorExtras {
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByReference(address))
+        }
+        
+        actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptorExtras {
+            val ref = io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByReference()
+            allocator.register(ref)
+            return ByReference(ref)
+        }
+        
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerDescriptorExtras) -> Unit): ArrayHolder<WGPUSamplerDescriptorExtras> {
+            val ref = io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue()
+            val array = ref.toArray(size.toInt())
+            array.forEachIndexed { index, struct ->
+                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue))
+            }
+            val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
+            return ArrayHolder(pointer)
+        }
+    }
+    
+    class ByReference(val handle: io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByReference = io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByReference(com.sun.jna.Pointer.NULL)) : WGPUSamplerDescriptorExtras {
+        override var chain: WGPUChainedStruct
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = handle.samplerBorderColor.toUInt() as WGPUSamplerBorderColor
+            set(value) { handle.samplerBorderColor = value.toInt() }
+        override val handler: NativeAddress
+            get() {
+                handle.write()
+                return handle.pointer
+            }
+    }
+    
+    class ByValue(val handle: io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue = io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue(com.sun.jna.Pointer.NULL)) : WGPUSamplerDescriptorExtras {
+        override var chain: WGPUChainedStruct
+            get() {
+                handle.readField("chain")
+                return WGPUChainedStruct.ByValue(handle.chain)
+            }
+            set(value) {
+                val bytes = value.handler.getByteArray(0, handle.chain.size())
+                handle.readField("chain")
+                handle.chain.pointer.write(0, bytes, 0, bytes.size)
+                handle.readField("chain")
+            }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = handle.samplerBorderColor.toUInt() as WGPUSamplerBorderColor
+            set(value) { handle.samplerBorderColor = value.toInt() }
+        override val handler: NativeAddress
+            get() {
+                handle.write()
+                return handle.pointer
+            }
+    }
+}
+
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
     io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuGenerateReport(instance?.handler, report?.handler)
     return
@@ -11050,21 +11148,6 @@ actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress
 
 actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
     return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuTextureGetNativeMetalTexture(texture?.handler)
-}
-
-actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderPassEncoderSetImmediates(encoder?.handler, offset.toInt(), sizeBytes.toInt(), data)
-    return
-}
-
-actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuComputePassEncoderSetImmediates(encoder?.handler, offset.toInt(), sizeBytes.toInt(), data)
-    return
-}
-
-actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuRenderBundleEncoderSetImmediates(encoder?.handler, offset.toInt(), sizeBytes.toInt(), data)
-    return
 }
 
 actual fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit {
@@ -11124,6 +11207,15 @@ actual fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt {
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceStopGraphicsDebuggerCapture(device?.handler)
     return
+}
+
+actual fun wgpuCommandEncoderClearTexture(commandEncoder: WGPUCommandEncoder?, texture: WGPUTexture?, range: WGPUImageSubresourceRange?): Unit {
+    io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuCommandEncoderClearTexture(commandEncoder?.handler, texture?.handler, range?.handler)
+    return
+}
+
+actual fun wgpuDeviceCreateShaderModuleTrusted(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?, runtimeChecks: ULong): WGPUShaderModule? {
+    return io.ygdrasil.wgpu.android.wgpu_hLibraryInstance.wgpuDeviceCreateShaderModuleTrusted(device?.handler, descriptor?.handler, runtimeChecks.toLong())?.let { WGPUShaderModule(it) }
 }
 
 private fun interface WGPUProcJna : com.sun.jna.Callback {

@@ -111,6 +111,17 @@ const val WGPUInstanceFlag_WithEnv : WGPUInstanceFlag = 134217728uL
 const val WGPUInstanceFlag_Force32 : WGPUInstanceFlag = 2147483647uL
 
 /**
+ * Describes how shader bound checks should be performed.
+ */
+typealias WGPUShaderRuntimeChecks = ULong
+const val WGPUShaderRuntimeChecks_None : WGPUShaderRuntimeChecks = 0uL
+const val WGPUShaderRuntimeChecks_BoundsChecks : WGPUShaderRuntimeChecks = 1uL
+const val WGPUShaderRuntimeChecks_ForceLoopBounding : WGPUShaderRuntimeChecks = 2uL
+const val WGPUShaderRuntimeChecks_RayQueryInitializationTracking : WGPUShaderRuntimeChecks = 4uL
+const val WGPUShaderRuntimeChecks_TaskShaderDispatchTracking : WGPUShaderRuntimeChecks = 8uL
+const val WGPUShaderRuntimeChecks_MeshShaderPrimitiveIndicesClamp : WGPUShaderRuntimeChecks = 16uL
+
+/**
  * Nullable value defining a pointer+length view into a UTF-8 encoded string.
  *
  * Values passed into the API may use the special length value @ref WGPU_STRLEN
@@ -1822,6 +1833,7 @@ const val WGPUWGSLLanguageFeatureName_SubgroupId : WGPUWGSLLanguageFeatureName =
 const val WGPUWGSLLanguageFeatureName_TextureAndSamplerLet : WGPUWGSLLanguageFeatureName = 7u
 const val WGPUWGSLLanguageFeatureName_SubgroupUniformity : WGPUWGSLLanguageFeatureName = 8u
 const val WGPUWGSLLanguageFeatureName_TextureFormatsTier1 : WGPUWGSLLanguageFeatureName = 9u
+const val WGPUWGSLLanguageFeatureName_LinearIndexing : WGPUWGSLLanguageFeatureName = 10u
 const val WGPUWGSLLanguageFeatureName_Force32 : WGPUWGSLLanguageFeatureName = 2147483647u
 
 /**
@@ -5017,6 +5029,8 @@ expect fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: WGPUComputeP
 
 expect fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePassEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit
 
+expect fun wgpuComputePassEncoderSetImmediates(computePassEncoder: WGPUComputePassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit
+
 expect fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit
 
 expect fun wgpuComputePassEncoderSetPipeline(computePassEncoder: WGPUComputePassEncoder?, pipeline: WGPUComputePipeline?): Unit
@@ -5338,6 +5352,8 @@ expect fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: WGPURender
 
 expect fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBundleEncoder?, groupIndex: UInt, group: WGPUBindGroup?, dynamicOffsetCount: ULong, dynamicOffsets: NativeAddress?): Unit
 
+expect fun wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder: WGPURenderBundleEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit
+
 expect fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit
 
 expect fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: WGPURenderBundleEncoder?, label: WGPUStringView): Unit
@@ -5385,6 +5401,8 @@ expect fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEn
  * The RGBA blend constant. Represents an `f32` color using @ref DoubleAsSupertype.
  */
 expect fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit
+
+expect fun wgpuRenderPassEncoderSetImmediates(renderPassEncoder: WGPURenderPassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit
 
 expect fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit
 
@@ -5629,43 +5647,43 @@ const val WGPUSType_DeviceExtras : WGPUNativeSType = 196609u
  */
 const val WGPUSType_NativeLimits : WGPUNativeSType = 196610u
 /**
- * Identifies @ref WGPUPipelineLayoutExtras.
- */
-const val WGPUSType_PipelineLayoutExtras : WGPUNativeSType = 196611u
-/**
  * Identifies @ref WGPUShaderSourceGLSL.
  */
-const val WGPUSType_ShaderSourceGLSL : WGPUNativeSType = 196612u
+const val WGPUSType_ShaderSourceGLSL : WGPUNativeSType = 196611u
 /**
  * Identifies @ref WGPUInstanceExtras.
  */
-const val WGPUSType_InstanceExtras : WGPUNativeSType = 196614u
+const val WGPUSType_InstanceExtras : WGPUNativeSType = 196612u
 /**
  * Identifies @ref WGPUBindGroupEntryExtras.
  */
-const val WGPUSType_BindGroupEntryExtras : WGPUNativeSType = 196615u
+const val WGPUSType_BindGroupEntryExtras : WGPUNativeSType = 196613u
 /**
  * Identifies @ref WGPUBindGroupLayoutEntryExtras.
  */
-const val WGPUSType_BindGroupLayoutEntryExtras : WGPUNativeSType = 196616u
+const val WGPUSType_BindGroupLayoutEntryExtras : WGPUNativeSType = 196614u
 /**
  * Identifies @ref WGPUQuerySetDescriptorExtras.
  */
-const val WGPUSType_QuerySetDescriptorExtras : WGPUNativeSType = 196617u
+const val WGPUSType_QuerySetDescriptorExtras : WGPUNativeSType = 196615u
 /**
  * Identifies @ref WGPUSurfaceConfigurationExtras.
  */
-const val WGPUSType_SurfaceConfigurationExtras : WGPUNativeSType = 196618u
+const val WGPUSType_SurfaceConfigurationExtras : WGPUNativeSType = 196616u
 /**
  * Identifies @ref WGPUSurfaceSourceSwapChainPanel.
  */
-const val WGPUSType_SurfaceSourceSwapChainPanel : WGPUNativeSType = 196619u
+const val WGPUSType_SurfaceSourceSwapChainPanel : WGPUNativeSType = 196617u
 /**
  * Identifies @ref WGPUPrimitiveStateExtras.
  */
-const val WGPUSType_PrimitiveStateExtras : WGPUNativeSType = 196620u
+const val WGPUSType_PrimitiveStateExtras : WGPUNativeSType = 196618u
 /**
- * Identifies @ref WGPUPrimitiveStateExtras.
+ * Identifies @ref WGPUSamplerDescriptorExtras.
+ */
+const val WGPUSType_SamplerDescriptorExtras : WGPUNativeSType = 196619u
+/**
+ * Identifies @ref WGPUSamplerDescriptorExtras.
  */
 const val WGPUNativeSType_Force32 : WGPUNativeSType = 2147483647u
 
@@ -5746,8 +5764,8 @@ typealias WGPUNativeFeature = UInt
  * Enables @ref wgpuRenderPassEncoderSetImmediates,
  * @ref wgpuComputePassEncoderSetImmediates,
  * @ref wgpuRenderBundleEncoderSetImmediates,
- * non-zero @c immediateDataSize in @ref WGPUPipelineLayoutExtras,
- * and non-zero @c maxImmediateSize in @ref WGPUNativeLimits.
+ * non-zero @c immediateSize in @ref WGPUPipelineLayout,
+ * and non-zero @c maxImmediateSize in @ref WGPULimits.
  *
  * A block of immediate data can be declared in WGSL with
  * @c var<immediate>:
@@ -5911,9 +5929,9 @@ const val WGPUNativeFeature_StorageResourceBindingArray : WGPUNativeFeature = 19
 const val WGPUNativeFeature_PartiallyBoundBindingArray : WGPUNativeFeature = 196618u
 /**
  * Enables normalized 16-bit texture formats:
- * @ref WGPUNativeTextureFormat_R16Unorm, @ref WGPUNativeTextureFormat_R16Snorm,
- * @ref WGPUNativeTextureFormat_Rg16Unorm, @ref WGPUNativeTextureFormat_Rg16Snorm,
- * @ref WGPUNativeTextureFormat_Rgba16Unorm, @ref WGPUNativeTextureFormat_Rgba16Snorm.
+ * @ref WGPUTextureFormat_R16Unorm, @ref WGPUTextureFormat_R16Snorm,
+ * @ref WGPUTextureFormat_RG16Unorm, @ref WGPUTextureFormat_RG16Snorm,
+ * @ref WGPUTextureFormat_RGBA16Unorm, @ref WGPUTextureFormat_RGBA16Snorm.
  *
  * Supported platforms:
  * - Vulkan
@@ -5979,12 +5997,26 @@ const val WGPUNativeFeature_MappablePrimaryBuffers : WGPUNativeFeature = 196622u
  */
 const val WGPUNativeFeature_BufferBindingArray : WGPUNativeFeature = 196623u
 /**
- * Allows shaders to index uniform buffer and storage texture resource
+ * Allows shaders to index storage texture resource
  * arrays with dynamically non-uniform values.
  *
  * This is a native only feature.
  */
-const val WGPUNativeFeature_UniformBufferAndStorageTextureArrayNonUniformIndexing : WGPUNativeFeature = 196624u
+const val WGPUNativeFeature_StorageTextureArrayNonUniformIndexing : WGPUNativeFeature = 196624u
+/**
+ * Allows shaders to index storage texture resource
+ * arrays with dynamically non-uniform values.
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_AddressModeClampToZero : WGPUNativeFeature = 196625u
+/**
+ * Allows shaders to index storage texture resource
+ * arrays with dynamically non-uniform values.
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_AddressModeClampToBorder : WGPUNativeFeature = 196626u
 /**
  * Allows the user to set @ref WGPUPolygonMode_Line in
  * @ref WGPUPrimitiveStateExtras::polygonMode.
@@ -6027,21 +6059,26 @@ const val WGPUNativeFeature_PolygonModePoint : WGPUNativeFeature = 196628u
  */
 const val WGPUNativeFeature_ConservativeRasterization : WGPUNativeFeature = 196629u
 /**
- * Enables creating shader modules from pre-compiled SPIR-V binary via
- * @ref wgpuDeviceCreateShaderModuleSpirV.
- *
- * Shader code isn't parsed or interpreted in any way. It is the caller's
- * responsibility to ensure the code is correct.
+ * Enables clear to zero for textures.
  *
  * Supported platforms:
- * - Vulkan
- * - DX12
- * - Metal
- * - WebGPU
+ * - All
  *
  * This is a native only feature.
  */
-const val WGPUNativeFeature_SpirvShaderPassthrough : WGPUNativeFeature = 196631u
+const val WGPUNativeFeature_ClearTexture : WGPUNativeFeature = 196630u
+/**
+ * Enables multiview render passes and `builtin(view_index)` in vertex/mesh shaders.
+ *
+ * Supported platforms:
+ * - Vulkan
+ * - Metal
+ * - DX12
+ * - OpenGL (web only)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_Multiview : WGPUNativeFeature = 196632u
 /**
  * Enables using 64-bit types for vertex attributes.
  *
@@ -6198,12 +6235,202 @@ const val WGPUNativeFeature_TimestampQueryInsidePasses : WGPUNativeFeature = 196
  */
 const val WGPUNativeFeature_ShaderInt64 : WGPUNativeFeature = 196646u
 /**
- * Allows shaders to use i64 and u64.
+ * Allows shaders to use f32 atomic load, store, add, sub, and exchange.
+ *
+ * Supported platforms:
+ * - Metal (with MSL 3.0+ and Apple7+/Mac2)
+ * - Vulkan (with [VK_EXT_shader_atomic_float])
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_ShaderFloat32Atomic : WGPUNativeFeature = 196647u
+/**
+ * Enables image atomic fetch add, and, xor, or, min, and max for R32Uint and R32Sint textures.
  *
  * Supported platforms:
  * - Vulkan
- * - DX12 (DXC only)
- * - Metal (with MSL 2.3+)
+ * - DX12
+ * - Metal (with MSL 3.1+)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_TextureAtomic : WGPUNativeFeature = 196648u
+/**
+ * Allows for creation of textures of format
+ * @ref WGPUNativeTextureFormat_P010.
+ *
+ * Supported platforms:
+ * - DX12
+ * - Vulkan
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_TextureFormatP010 : WGPUNativeFeature = 196649u
+/**
+ * Allows the use of pipeline cache objects
+ *
+ * Supported platforms:
+ * - Vulkan
+ *
+ * Unimplemented Platforms:
+ * - DX12
+ * - Metal
+ */
+const val WGPUNativeFeature_PipelineCache : WGPUNativeFeature = 196651u
+/**
+ * Allows shaders to use i64 and u64 atomic min and max.
+ *
+ * Supported platforms:
+ * - Vulkan (with VK_KHR_shader_atomic_int64)
+ * - DX12 (with SM 6.6+)
+ * - Metal (with MSL 2.4+)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_ShaderInt64AtomicMinMax : WGPUNativeFeature = 196652u
+/**
+ * Allows shaders to use all i64 and u64 atomic operations.
+ *
+ * Supported platforms:
+ * - Vulkan (with VK_KHR_shader_atomic_int64)
+ * - DX12 (with SM 6.6+)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_ShaderInt64AtomicAllOps : WGPUNativeFeature = 196653u
+/**
+ * Enables R64Uint image atomic min and max.
+ *
+ * Supported platforms:
+ * - Vulkan (with VK_EXT_shader_image_atomic_int64)
+ * - DX12 (with SM 6.6+)
+ * - Metal (with MSL 3.1+)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_TextureInt64Atomic : WGPUNativeFeature = 196656u
+/**
+ * Enables shader barycentric coordinates.
+ *
+ * Supported platforms:
+ * - Vulkan (with VK_KHR_fragment_shader_barycentric)
+ * - DX12 (with SM 6.1+)
+ * - Metal (with MSL 2.2+)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_ShaderBarycentrics : WGPUNativeFeature = 196663u
+/**
+ * Enables using multiview where not all texture array layers are rendered to in a single render pass/render pipeline. Making
+ * use of this feature also requires enabling `Features::MULTIVIEW`.
+ *
+ * Supported platforms
+ * - Vulkan
+ * - DX12
+ *
+ * While metal supports this in theory, the behavior of `view_index` differs from vulkan and dx12 so the feature isn't exposed.
+ */
+const val WGPUNativeFeature_SelectiveMultiview : WGPUNativeFeature = 196664u
+/**
+ * Enables using multiview where not all texture array layers are rendered to in a single render pass/render pipeline. Making
+ * use of this feature also requires enabling `Features::MULTIVIEW`.
+ *
+ * Supported platforms
+ * - Vulkan
+ * - DX12
+ *
+ * While metal supports this in theory, the behavior of `view_index` differs from vulkan and dx12 so the feature isn't exposed.
+ */
+const val WGPUNativeFeature_MultisampleArray : WGPUNativeFeature = 196666u
+/**
+ * Enables cooperative matrix operations (also known as tensor cores on NVIDIA GPUs
+ * or simdgroup matrix operations on Apple GPUs).
+ *
+ * Cooperative matrices allow a workgroup to collectively load, store, and perform
+ * matrix multiply-accumulate operations on small tiles of data, enabling
+ * hardware-accelerated matrix math.
+ *
+ * @b EXPERIMENTAL: Features enabled by this may have major bugs and are
+ * expected to be subject to breaking changes.
+ *
+ * **Current limitations:** The implementation currently only supports 8x8 f32 matrices.
+ * On Vulkan, support is determined by querying `vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR`
+ * for configurations matching 8x8x8 f32. Most Vulkan implementations (NVIDIA, AMD) primarily
+ * support f16 inputs at larger sizes (e.g., 16x16), so Vulkan support may be limited.
+ *
+ * Supported platforms:
+ * - Metal (with MSL 2.3+ and Apple7+/Mac2+, using simdgroup matrix operations)
+ * - Vulkan (with [VK_KHR_cooperative_matrix](https://registry.khronos.org/vulkan/specs/latest/man/html/VK_KHR_cooperative_matrix.html), if 8x8 f32 is supported)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_CooperativeMatrix : WGPUNativeFeature = 196667u
+/**
+ * Enables shader per-vertex attributes.
+ *
+ * Supported platforms:
+ * - Vulkan (with VK_KHR_fragment_shader_barycentric)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_ShaderPerVertex : WGPUNativeFeature = 196668u
+/**
+ * Enables shader `draw_index` builtin.
+ *
+ * Supported platforms:
+ * - GLES
+ * - Vulkan
+ *
+ * Potential platforms:
+ * - DX12
+ * - Metal
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_ShaderDrawIndex : WGPUNativeFeature = 196669u
+/**
+ * Allows the user to create arrays of acceleration structures in shaders:
+ *
+ * ex.
+ * - `var tlas: binding_array<acceleration_structure, 10>` (WGSL)
+ *
+ * This capability allows them to exist and to be indexed by dynamically uniform values.
+ *
+ * Supported platforms:
+ * - DX12
+ * - Vulkan
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_AccelerationStructureBindingArray : WGPUNativeFeature = 196670u
+/**
+ * Enables the `@coherent` memory decoration on storage buffer variables.
+ *
+ * Backend mapping:
+ * - Vulkan
+ * - DX12
+ * - Metal (3.2+)
+ * - GLES (ES 3.1+ / GL 4.3+)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_MemoryDecorationCoherent : WGPUNativeFeature = 196671u
+/**
+ * Enables the `@volatile` memory decoration on storage buffer variables.
+ *
+ * Backend mapping:
+ * - Vulkan
+ * - GLES (ES 3.1+ / GL 4.3+)
+ *
+ * This is a native only feature.
+ */
+const val WGPUNativeFeature_MemoryDecorationVolatile : WGPUNativeFeature = 196672u
+/**
+ * Enables the `@volatile` memory decoration on storage buffer variables.
+ *
+ * Backend mapping:
+ * - Vulkan
+ * - GLES (ES 3.1+ / GL 4.3+)
  *
  * This is a native only feature.
  */
@@ -6610,18 +6837,6 @@ expect interface WGPUNativeLimits {
      */
     var chain: WGPUChainedStruct
     /**
-     * Amount of storage available for immediate data, in bytes.
-     *
-     * Defaults to 0. A non-zero value requires
-     * @ref WGPUNativeFeature_Immediates. Expected maximum sizes vary by
-     * backend:
-     * - Vulkan: 128-256 bytes
-     * - DX12: 128 bytes
-     * - Metal: 4096 bytes
-     * - OpenGL: ~256 bytes (emulated with uniforms)
-     */
-    var maxImmediateSize: UInt
-    /**
      * Maximum number of live non-sampler bindings.
      *
      * Default is 1,000,000. Only meaningful on D3D12.
@@ -6631,34 +6846,24 @@ expect interface WGPUNativeLimits {
      */
     var maxNonSamplerBindings: UInt
     /**
-     * Maximum number of individual resources within binding arrays per
-     * shader stage.
+     * Maximum number of individual resources within binding arrays that can be accessed
+     * in a single shader stage. Applies to all types of bindings except samplers.
      */
     var maxBindingArrayElementsPerShaderStage: UInt
+    /**
+     * Maximum number of individual samplers within binding arrays that
+     * can be accessed in a single shader stage.
+     */
+    var maxBindingArraySamplerElementsPerShaderStage: UInt
+    /**
+     * The maximum number of views that can be used in multiview rendering.
+     */
+    var maxMultiviewViewCount: UInt
     val handler: NativeAddress
     companion object {
         operator fun invoke(address: NativeAddress): WGPUNativeLimits
         fun allocate(allocator: MemoryAllocator): WGPUNativeLimits
         fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUNativeLimits) -> Unit): ArrayHolder<WGPUNativeLimits>
-    }
-}
-
-expect interface WGPUPipelineLayoutExtras {
-    var chain: WGPUChainedStruct
-    /**
-     * The number of bytes of immediate data allocated for use in shaders
-     * attached to this pipeline.
-     *
-     * The @c var<immediate> declarations in the shader must be equal or
-     * smaller than this size. If this value is non-zero,
-     * @ref WGPUNativeFeature_Immediates must be enabled.
-     */
-    var immediateDataSize: UInt
-    val handler: NativeAddress
-    companion object {
-        operator fun invoke(address: NativeAddress): WGPUPipelineLayoutExtras
-        fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutExtras
-        fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPipelineLayoutExtras) -> Unit): ArrayHolder<WGPUPipelineLayoutExtras>
     }
 }
 
@@ -6894,37 +7099,6 @@ expect interface WGPUPrimitiveStateExtras {
 }
 
 typealias WGPUNativeTextureFormat = UInt
-const val WGPUNativeTextureFormat_R16Unorm : WGPUNativeTextureFormat = 196609u
-/**
- * Red channel only. 16-bit signed integer per channel.
- * [-32767, 32767] converted to/from float [-1, 1] in shader.
- * Requires @ref WGPUNativeFeature_TextureFormat16bitNorm.
- */
-const val WGPUNativeTextureFormat_R16Snorm : WGPUNativeTextureFormat = 196610u
-/**
- * Red and green channels. 16-bit unsigned integer per channel.
- * [0, 65535] converted to/from float [0, 1] in shader.
- * Requires @ref WGPUNativeFeature_TextureFormat16bitNorm.
- */
-const val WGPUNativeTextureFormat_Rg16Unorm : WGPUNativeTextureFormat = 196611u
-/**
- * Red and green channels. 16-bit signed integer per channel.
- * [-32767, 32767] converted to/from float [-1, 1] in shader.
- * Requires @ref WGPUNativeFeature_TextureFormat16bitNorm.
- */
-const val WGPUNativeTextureFormat_Rg16Snorm : WGPUNativeTextureFormat = 196612u
-/**
- * Red, green, blue, and alpha channels. 16-bit unsigned integer per channel.
- * [0, 65535] converted to/from float [0, 1] in shader.
- * Requires @ref WGPUNativeFeature_TextureFormat16bitNorm.
- */
-const val WGPUNativeTextureFormat_Rgba16Unorm : WGPUNativeTextureFormat = 196613u
-/**
- * Red, green, blue, and alpha channels. 16-bit signed integer per channel.
- * [-32767, 32767] converted to/from float [-1, 1] in shader.
- * Requires @ref WGPUNativeFeature_TextureFormat16bitNorm.
- */
-const val WGPUNativeTextureFormat_Rgba16Snorm : WGPUNativeTextureFormat = 196614u
 /**
  * YUV 4:2:0 chroma subsampled format (NV12).
  * Plane 0 contains R8Unorm luminance (Y), Plane 1 contains Rg8Unorm
@@ -6938,6 +7112,43 @@ const val WGPUNativeTextureFormat_NV12 : WGPUNativeTextureFormat = 196615u
  * chrominance (UV) at half width and half height.
  */
 const val WGPUNativeTextureFormat_P010 : WGPUNativeTextureFormat = 196616u
+
+expect interface WGPUImageSubresourceRange {
+    var aspect: WGPUTextureAspect
+    var baseMipLevel: UInt
+    var mipLevelCount: UInt
+    var baseArrayLayer: UInt
+    var arrayLayerCount: UInt
+    val handler: NativeAddress
+    companion object {
+        operator fun invoke(address: NativeAddress): WGPUImageSubresourceRange
+        fun allocate(allocator: MemoryAllocator): WGPUImageSubresourceRange
+        fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageSubresourceRange) -> Unit): ArrayHolder<WGPUImageSubresourceRange>
+    }
+}
+
+typealias WGPUNativeAddressMode = UInt
+const val WGPUNativeAddressMode_ClampToBorder : WGPUNativeAddressMode = 4u
+const val WGPUNativeAddressMode_Force32 : WGPUNativeAddressMode = 2147483647u
+
+typealias WGPUSamplerBorderColor = UInt
+const val WGPUSamplerBorderColor_Undefined : WGPUSamplerBorderColor = 0u
+const val WGPUSamplerBorderColor_TransparentBlack : WGPUSamplerBorderColor = 1u
+const val WGPUSamplerBorderColor_OpaqueBlack : WGPUSamplerBorderColor = 2u
+const val WGPUSamplerBorderColor_OpaqueWhite : WGPUSamplerBorderColor = 3u
+const val WGPUSamplerBorderColor_Zero : WGPUSamplerBorderColor = 4u
+const val WGPUSamplerBorderColor_Force32 : WGPUSamplerBorderColor = 2147483647u
+
+expect interface WGPUSamplerDescriptorExtras {
+    var chain: WGPUChainedStruct
+    var samplerBorderColor: WGPUSamplerBorderColor
+    val handler: NativeAddress
+    companion object {
+        operator fun invoke(address: NativeAddress): WGPUSamplerDescriptorExtras
+        fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptorExtras
+        fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerDescriptorExtras) -> Unit): ArrayHolder<WGPUSamplerDescriptorExtras>
+    }
+}
 
 expect fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit
 
@@ -6984,12 +7195,6 @@ expect fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress
  */
 expect fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress?
 
-expect fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit
-
-expect fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit
-
-expect fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit
-
 expect fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit
 
 expect fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: WGPURenderPassEncoder?, buffer: WGPUBuffer?, offset: ULong, count: UInt): Unit
@@ -7013,6 +7218,10 @@ expect fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: WGPURenderPass
 expect fun wgpuDeviceStartGraphicsDebuggerCapture(device: WGPUDevice?): UInt
 
 expect fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit
+
+expect fun wgpuCommandEncoderClearTexture(commandEncoder: WGPUCommandEncoder?, texture: WGPUTexture?, range: WGPUImageSubresourceRange?): Unit
+
+expect fun wgpuDeviceCreateShaderModuleTrusted(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?, runtimeChecks: ULong): WGPUShaderModule?
 
 /**
  * @}

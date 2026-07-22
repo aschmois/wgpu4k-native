@@ -1055,20 +1055,13 @@ open class WGPUDeviceExtras(pointer: Pointer? = null) : Structure(pointer) {
 
 open class WGPUNativeLimits(pointer: Pointer? = null) : Structure(pointer) {
     @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
-    @JvmField var maxImmediateSize: Int = 0
     @JvmField var maxNonSamplerBindings: Int = 0
     @JvmField var maxBindingArrayElementsPerShaderStage: Int = 0
-    override fun getFieldOrder() = listOf<String>("chain", "maxImmediateSize", "maxNonSamplerBindings", "maxBindingArrayElementsPerShaderStage")
+    @JvmField var maxBindingArraySamplerElementsPerShaderStage: Int = 0
+    @JvmField var maxMultiviewViewCount: Int = 0
+    override fun getFieldOrder() = listOf<String>("chain", "maxNonSamplerBindings", "maxBindingArrayElementsPerShaderStage", "maxBindingArraySamplerElementsPerShaderStage", "maxMultiviewViewCount")
     class ByReference(pointer: Pointer? = null) : WGPUNativeLimits(pointer), Structure.ByReference
     class ByValue(pointer: Pointer? = null) : WGPUNativeLimits(pointer), Structure.ByValue
-}
-
-open class WGPUPipelineLayoutExtras(pointer: Pointer? = null) : Structure(pointer) {
-    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
-    @JvmField var immediateDataSize: Int = 0
-    override fun getFieldOrder() = listOf<String>("chain", "immediateDataSize")
-    class ByReference(pointer: Pointer? = null) : WGPUPipelineLayoutExtras(pointer), Structure.ByReference
-    class ByValue(pointer: Pointer? = null) : WGPUPipelineLayoutExtras(pointer), Structure.ByValue
 }
 
 open class WGPUShaderDefine(pointer: Pointer? = null) : Structure(pointer) {
@@ -1203,6 +1196,25 @@ open class WGPUPrimitiveStateExtras(pointer: Pointer? = null) : Structure(pointe
     class ByValue(pointer: Pointer? = null) : WGPUPrimitiveStateExtras(pointer), Structure.ByValue
 }
 
+open class WGPUImageSubresourceRange(pointer: Pointer? = null) : Structure(pointer) {
+    @JvmField var aspect: Int = 0
+    @JvmField var baseMipLevel: Int = 0
+    @JvmField var mipLevelCount: Int = 0
+    @JvmField var baseArrayLayer: Int = 0
+    @JvmField var arrayLayerCount: Int = 0
+    override fun getFieldOrder() = listOf<String>("aspect", "baseMipLevel", "mipLevelCount", "baseArrayLayer", "arrayLayerCount")
+    class ByReference(pointer: Pointer? = null) : WGPUImageSubresourceRange(pointer), Structure.ByReference
+    class ByValue(pointer: Pointer? = null) : WGPUImageSubresourceRange(pointer), Structure.ByValue
+}
+
+open class WGPUSamplerDescriptorExtras(pointer: Pointer? = null) : Structure(pointer) {
+    @JvmField var chain: io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
+    @JvmField var samplerBorderColor: Int = 0
+    override fun getFieldOrder() = listOf<String>("chain", "samplerBorderColor")
+    class ByReference(pointer: Pointer? = null) : WGPUSamplerDescriptorExtras(pointer), Structure.ByReference
+    class ByValue(pointer: Pointer? = null) : WGPUSamplerDescriptorExtras(pointer), Structure.ByValue
+}
+
 internal interface wgpu_hLibrary : Library {
     fun wgpuCreateInstance(descriptor: Pointer?): Pointer?
     fun wgpuGetInstanceFeatures(features: Pointer?): Unit
@@ -1262,6 +1274,7 @@ internal interface wgpu_hLibrary : Library {
     fun wgpuComputePassEncoderPopDebugGroup(computePassEncoder: Pointer?): Unit
     fun wgpuComputePassEncoderPushDebugGroup(computePassEncoder: Pointer?, groupLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
     fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: Pointer?, groupIndex: Int, group: Pointer?, dynamicOffsetCount: Long, dynamicOffsets: Pointer?): Unit
+    fun wgpuComputePassEncoderSetImmediates(computePassEncoder: Pointer?, offset: Int, data: Pointer?, size: Long): Unit
     fun wgpuComputePassEncoderSetLabel(computePassEncoder: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
     fun wgpuComputePassEncoderSetPipeline(computePassEncoder: Pointer?, pipeline: Pointer?): Unit
     fun wgpuComputePassEncoderAddRef(computePassEncoder: Pointer?): Unit
@@ -1335,6 +1348,7 @@ internal interface wgpu_hLibrary : Library {
     fun wgpuRenderBundleEncoderPopDebugGroup(renderBundleEncoder: Pointer?): Unit
     fun wgpuRenderBundleEncoderPushDebugGroup(renderBundleEncoder: Pointer?, groupLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
     fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: Pointer?, groupIndex: Int, group: Pointer?, dynamicOffsetCount: Long, dynamicOffsets: Pointer?): Unit
+    fun wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder: Pointer?, offset: Int, data: Pointer?, size: Long): Unit
     fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: Pointer?, buffer: Pointer?, format: Int, offset: Long, size: Long): Unit
     fun wgpuRenderBundleEncoderSetLabel(renderBundleEncoder: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
     fun wgpuRenderBundleEncoderSetPipeline(renderBundleEncoder: Pointer?, pipeline: Pointer?): Unit
@@ -1354,6 +1368,7 @@ internal interface wgpu_hLibrary : Library {
     fun wgpuRenderPassEncoderPushDebugGroup(renderPassEncoder: Pointer?, groupLabel: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
     fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: Pointer?, groupIndex: Int, group: Pointer?, dynamicOffsetCount: Long, dynamicOffsets: Pointer?): Unit
     fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: Pointer?, color: Pointer?): Unit
+    fun wgpuRenderPassEncoderSetImmediates(renderPassEncoder: Pointer?, offset: Int, data: Pointer?, size: Long): Unit
     fun wgpuRenderPassEncoderSetIndexBuffer(renderPassEncoder: Pointer?, buffer: Pointer?, format: Int, offset: Long, size: Long): Unit
     fun wgpuRenderPassEncoderSetLabel(renderPassEncoder: Pointer?, label: io.ygdrasil.wgpu.android.WGPUStringView.ByValue): Unit
     fun wgpuRenderPassEncoderSetPipeline(renderPassEncoder: Pointer?, pipeline: Pointer?): Unit
@@ -1415,9 +1430,6 @@ internal interface wgpu_hLibrary : Library {
     fun wgpuDeviceGetNativeMetalDevice(device: Pointer?): Pointer?
     fun wgpuQueueGetNativeMetalCommandQueue(queue: Pointer?): Pointer?
     fun wgpuTextureGetNativeMetalTexture(texture: Pointer?): Pointer?
-    fun wgpuRenderPassEncoderSetImmediates(encoder: Pointer?, offset: Int, sizeBytes: Int, data: Pointer?): Unit
-    fun wgpuComputePassEncoderSetImmediates(encoder: Pointer?, offset: Int, sizeBytes: Int, data: Pointer?): Unit
-    fun wgpuRenderBundleEncoderSetImmediates(encoder: Pointer?, offset: Int, sizeBytes: Int, data: Pointer?): Unit
     fun wgpuRenderPassEncoderMultiDrawIndirect(encoder: Pointer?, buffer: Pointer?, offset: Long, count: Int): Unit
     fun wgpuRenderPassEncoderMultiDrawIndexedIndirect(encoder: Pointer?, buffer: Pointer?, offset: Long, count: Int): Unit
     fun wgpuRenderPassEncoderMultiDrawIndirectCount(encoder: Pointer?, buffer: Pointer?, offset: Long, count_buffer: Pointer?, count_buffer_offset: Long, max_count: Int): Unit
@@ -1430,6 +1442,8 @@ internal interface wgpu_hLibrary : Library {
     fun wgpuRenderPassEncoderWriteTimestamp(renderPassEncoder: Pointer?, querySet: Pointer?, queryIndex: Int): Unit
     fun wgpuDeviceStartGraphicsDebuggerCapture(device: Pointer?): Int
     fun wgpuDeviceStopGraphicsDebuggerCapture(device: Pointer?): Unit
+    fun wgpuCommandEncoderClearTexture(commandEncoder: Pointer?, texture: Pointer?, range: Pointer?): Unit
+    fun wgpuDeviceCreateShaderModuleTrusted(device: Pointer?, descriptor: Pointer?, runtimeChecks: Long): Pointer?
 }
 
 internal val wgpu_hLibraryInstance: wgpu_hLibrary by lazy {

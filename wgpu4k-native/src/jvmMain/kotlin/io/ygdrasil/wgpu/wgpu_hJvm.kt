@@ -60,45 +60,45 @@ private object KextractNativeBootstrap {
 
     private val bundles: kotlin.collections.Map<kotlin.String, Bundle> = kotlin.collections.mapOf(
         "darwin-aarch64" to Bundle(
-            key = "942bb3749d5028a006bd509074ab5e583a7ef1e3d2b1801ebb756e6e6631e6db",
+            key = "3d375bb3335218a005ec01b06b107825cff25f432e5b4cf3ee10bc2cb6a7467a",
             resources = kotlin.collections.listOf(
-                Resource("libwgpu_native.dylib", "db82d285ec0317cb44d23981c1a42c038fcafd9b0b56c8a1e502e28fb0bf9f71"),
+                Resource("libwgpu_native.dylib", "e72e8f1777dd0315bfee91c6b7e7b105234d5c1cc1621db4cf92ffee2ac2ae32"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "libwgpu_native.dylib",
             ),
         ),
         "darwin-x86-64" to Bundle(
-            key = "2f59d2604f9e22a065d68db862e61e92c1a7a8467a53c101f86f39f9f1ad5baa",
+            key = "146939519caab2e7492b64e78a96b189835852f4f776424025c1afdc35788f5f",
             resources = kotlin.collections.listOf(
-                Resource("libwgpu_native.dylib", "a324d2406c3aaf0ad67bc962d796a911ae770b17aa4c07540795e86f41d6a9a5"),
+                Resource("libwgpu_native.dylib", "d5175b3c0675e7f66b677a7c28537ff260a698c82fff96179247cd9c9dec6c8d"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "libwgpu_native.dylib",
             ),
         ),
         "linux-aarch64" to Bundle(
-            key = "a1d761e1f99942359c3d74c6622324b91a95ee2994e4b3037d19c0e201131d25",
+            key = "e9b3785130015d2107104ec3e8b72ebc20912e595726c95dc6e58a2cceea22ac",
             resources = kotlin.collections.listOf(
-                Resource("libwgpu_native.so", "fd70bee7ab7fc422cae358d984abece2364206f6bd6868a7486597a92098386d"),
+                Resource("libwgpu_native.so", "51d8a711c9a687f824712c42a206800b69f14eff8667a88f2f86936cdef0ebd0"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "libwgpu_native.so",
             ),
         ),
         "linux-x86-64" to Bundle(
-            key = "129bd63a2be26785822a07bbc1686b46148ce852c4dc1dafb1666dc4225c0542",
+            key = "7260f9fbfb52bc0fd0926ec1ffa3db52786122868d54dfc262752ccf76a09f08",
             resources = kotlin.collections.listOf(
-                Resource("libwgpu_native.so", "9637b9dca87f44e7df5fae922c8173a4c9456d508caaebc0b8e2c7fe327918e8"),
+                Resource("libwgpu_native.so", "be0d8270dd9d78e1039eeb413ee21be8a89776a752e56d6b0f57eefbbc2d749c"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "libwgpu_native.so",
             ),
         ),
         "win32-x86-64" to Bundle(
-            key = "8c58caea2c5f9d3855b3c39ae20e2d7d435cef67845979c53a67ef81deb4e27c",
+            key = "94b8466520009dae327f49f0709c1e1acceaf855d4922e4a888fca938241ab11",
             resources = kotlin.collections.listOf(
-                Resource("wgpu_native.dll", "681c1f28050eebe67e31fc40be1361abfebf4429c181c150f0f4a5044c144fc9"),
+                Resource("wgpu_native.dll", "5e26249c40dcdac43f5adca3195fcf40e4ec6c67472b38510165f411fcc198e7"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "wgpu_native.dll",
@@ -5717,6 +5717,14 @@ actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePas
     return
 }
 
+private val wgpuComputePassEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
+private val wgpuComputePassEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetImmediates") }
+private val wgpuComputePassEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderSetImmediates_ADDR, wgpuComputePassEncoderSetImmediates_DESC) }
+actual fun wgpuComputePassEncoderSetImmediates(computePassEncoder: WGPUComputePassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    wgpuComputePassEncoderSetImmediates_HANDLE.invokeExact(computePassEncoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), data?.handler ?: MemorySegment.NULL, size.toLong())
+    return
+}
+
 private val wgpuComputePassEncoderSetLabel_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, WGPUStringView.layout)
 private val wgpuComputePassEncoderSetLabel_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetLabel") }
 private val wgpuComputePassEncoderSetLabel_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderSetLabel_ADDR, wgpuComputePassEncoderSetLabel_DESC) }
@@ -6272,6 +6280,14 @@ actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBu
     return
 }
 
+private val wgpuRenderBundleEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
+private val wgpuRenderBundleEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetImmediates") }
+private val wgpuRenderBundleEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetImmediates_ADDR, wgpuRenderBundleEncoderSetImmediates_DESC) }
+actual fun wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder: WGPURenderBundleEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    wgpuRenderBundleEncoderSetImmediates_HANDLE.invokeExact(renderBundleEncoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), data?.handler ?: MemorySegment.NULL, size.toLong())
+    return
+}
+
 private val wgpuRenderBundleEncoderSetIndexBuffer_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG)
 private val wgpuRenderBundleEncoderSetIndexBuffer_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetIndexBuffer") }
 private val wgpuRenderBundleEncoderSetIndexBuffer_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetIndexBuffer_ADDR, wgpuRenderBundleEncoderSetIndexBuffer_DESC) }
@@ -6421,6 +6437,14 @@ private val wgpuRenderPassEncoderSetBlendConstant_ADDR: MemorySegment by lazy { 
 private val wgpuRenderPassEncoderSetBlendConstant_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetBlendConstant_ADDR, wgpuRenderPassEncoderSetBlendConstant_DESC) }
 actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
     wgpuRenderPassEncoderSetBlendConstant_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, color?.handler?.handler ?: MemorySegment.NULL)
+    return
+}
+
+private val wgpuRenderPassEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
+private val wgpuRenderPassEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetImmediates") }
+private val wgpuRenderPassEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetImmediates_ADDR, wgpuRenderPassEncoderSetImmediates_DESC) }
+actual fun wgpuRenderPassEncoderSetImmediates(renderPassEncoder: WGPURenderPassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    wgpuRenderPassEncoderSetImmediates_HANDLE.invokeExact(renderPassEncoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), data?.handler ?: MemorySegment.NULL, size.toLong())
     return
 }
 
@@ -7109,22 +7133,24 @@ actual interface WGPUDeviceExtras : CStructure {
 
 actual interface WGPUNativeLimits : CStructure {
     actual var chain: WGPUChainedStruct
-    actual var maxImmediateSize: UInt
     actual var maxNonSamplerBindings: UInt
     actual var maxBindingArrayElementsPerShaderStage: UInt
+    actual var maxBindingArraySamplerElementsPerShaderStage: UInt
+    actual var maxMultiviewViewCount: UInt
     actual override val handler: NativeAddress
     actual companion object {
         val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
             java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
-            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxImmediateSize"),
             ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxNonSamplerBindings"),
             ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxBindingArrayElementsPerShaderStage"),
-            java.lang.foreign.MemoryLayout.paddingLayout(4)
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxBindingArraySamplerElementsPerShaderStage"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("maxMultiviewViewCount")
         ).withByteAlignment(8).withName("WGPUNativeLimits")
         
-        val maxImmediateSize_VH: VarHandle = layout.varHandle(groupElement("maxImmediateSize"))
         val maxNonSamplerBindings_VH: VarHandle = layout.varHandle(groupElement("maxNonSamplerBindings"))
         val maxBindingArrayElementsPerShaderStage_VH: VarHandle = layout.varHandle(groupElement("maxBindingArrayElementsPerShaderStage"))
+        val maxBindingArraySamplerElementsPerShaderStage_VH: VarHandle = layout.varHandle(groupElement("maxBindingArraySamplerElementsPerShaderStage"))
+        val maxMultiviewViewCount_VH: VarHandle = layout.varHandle(groupElement("maxMultiviewViewCount"))
         
         actual operator fun invoke(address: NativeAddress): WGPUNativeLimits = ByReference(address)
         actual fun allocate(allocator: MemoryAllocator): WGPUNativeLimits = ByReference(allocator.allocate(layout.byteSize()))
@@ -7146,54 +7172,18 @@ actual interface WGPUNativeLimits : CStructure {
             set(value) {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
-        override var maxImmediateSize: UInt
-            get() = (maxImmediateSize_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
-            set(value) = maxImmediateSize_VH.set(handler.handler, 0L, value.toInt())
         override var maxNonSamplerBindings: UInt
             get() = (maxNonSamplerBindings_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = maxNonSamplerBindings_VH.set(handler.handler, 0L, value.toInt())
         override var maxBindingArrayElementsPerShaderStage: UInt
             get() = (maxBindingArrayElementsPerShaderStage_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = maxBindingArrayElementsPerShaderStage_VH.set(handler.handler, 0L, value.toInt())
-    }
-}
-
-actual interface WGPUPipelineLayoutExtras : CStructure {
-    actual var chain: WGPUChainedStruct
-    actual var immediateDataSize: UInt
-    actual override val handler: NativeAddress
-    actual companion object {
-        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
-            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
-            ValueLayout.JAVA_INT.withByteAlignment(4).withName("immediateDataSize"),
-            java.lang.foreign.MemoryLayout.paddingLayout(4)
-        ).withByteAlignment(8).withName("WGPUPipelineLayoutExtras")
-        
-        val immediateDataSize_VH: VarHandle = layout.varHandle(groupElement("immediateDataSize"))
-        
-        actual operator fun invoke(address: NativeAddress): WGPUPipelineLayoutExtras = ByReference(address)
-        actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutExtras = ByReference(allocator.allocate(layout.byteSize()))
-        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPipelineLayoutExtras) -> Unit): ArrayHolder<WGPUPipelineLayoutExtras> {
-            val byteSize = layout.byteSize()
-            val segment = allocator.allocate(byteSize * size.toLong())
-            for (i in 0 until size.toInt()) {
-                val slice = segment.handler.asSlice(i.toLong() * byteSize, byteSize).let(::NativeAddress)
-                provider(i.toUInt(), ByReference(slice))
-            }
-            return ArrayHolder(segment)
-        }
-    }
-    
-    @JvmInline
-    value class ByReference(override val handler: NativeAddress) : WGPUPipelineLayoutExtras {
-        override var chain: WGPUChainedStruct
-            get() = WGPUChainedStruct(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())))
-            set(value) {
-                MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
-            }
-        override var immediateDataSize: UInt
-            get() = (immediateDataSize_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
-            set(value) = immediateDataSize_VH.set(handler.handler, 0L, value.toInt())
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
+            get() = (maxBindingArraySamplerElementsPerShaderStage_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
+            set(value) = maxBindingArraySamplerElementsPerShaderStage_VH.set(handler.handler, 0L, value.toInt())
+        override var maxMultiviewViewCount: UInt
+            get() = (maxMultiviewViewCount_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
+            set(value) = maxMultiviewViewCount_VH.set(handler.handler, 0L, value.toInt())
     }
 }
 
@@ -7880,6 +7870,100 @@ actual interface WGPUPrimitiveStateExtras : CStructure {
     }
 }
 
+actual interface WGPUImageSubresourceRange : CStructure {
+    actual var aspect: WGPUTextureAspect
+    actual var baseMipLevel: UInt
+    actual var mipLevelCount: UInt
+    actual var baseArrayLayer: UInt
+    actual var arrayLayerCount: UInt
+    actual override val handler: NativeAddress
+    actual companion object {
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("aspect"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("baseMipLevel"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("mipLevelCount"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("baseArrayLayer"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("arrayLayerCount")
+        ).withByteAlignment(4).withName("WGPUImageSubresourceRange")
+        
+        val aspect_VH: VarHandle = layout.varHandle(groupElement("aspect"))
+        val baseMipLevel_VH: VarHandle = layout.varHandle(groupElement("baseMipLevel"))
+        val mipLevelCount_VH: VarHandle = layout.varHandle(groupElement("mipLevelCount"))
+        val baseArrayLayer_VH: VarHandle = layout.varHandle(groupElement("baseArrayLayer"))
+        val arrayLayerCount_VH: VarHandle = layout.varHandle(groupElement("arrayLayerCount"))
+        
+        actual operator fun invoke(address: NativeAddress): WGPUImageSubresourceRange = ByReference(address)
+        actual fun allocate(allocator: MemoryAllocator): WGPUImageSubresourceRange = ByReference(allocator.allocate(layout.byteSize()))
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageSubresourceRange) -> Unit): ArrayHolder<WGPUImageSubresourceRange> {
+            val byteSize = layout.byteSize()
+            val segment = allocator.allocate(byteSize * size.toLong())
+            for (i in 0 until size.toInt()) {
+                val slice = segment.handler.asSlice(i.toLong() * byteSize, byteSize).let(::NativeAddress)
+                provider(i.toUInt(), ByReference(slice))
+            }
+            return ArrayHolder(segment)
+        }
+    }
+    
+    @JvmInline
+    value class ByReference(override val handler: NativeAddress) : WGPUImageSubresourceRange {
+        override var aspect: WGPUTextureAspect
+            get() = (aspect_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUTextureAspect
+            set(value) = aspect_VH.set(handler.handler, 0L, value.toInt())
+        override var baseMipLevel: UInt
+            get() = (baseMipLevel_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
+            set(value) = baseMipLevel_VH.set(handler.handler, 0L, value.toInt())
+        override var mipLevelCount: UInt
+            get() = (mipLevelCount_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
+            set(value) = mipLevelCount_VH.set(handler.handler, 0L, value.toInt())
+        override var baseArrayLayer: UInt
+            get() = (baseArrayLayer_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
+            set(value) = baseArrayLayer_VH.set(handler.handler, 0L, value.toInt())
+        override var arrayLayerCount: UInt
+            get() = (arrayLayerCount_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
+            set(value) = arrayLayerCount_VH.set(handler.handler, 0L, value.toInt())
+    }
+}
+
+actual interface WGPUSamplerDescriptorExtras : CStructure {
+    actual var chain: WGPUChainedStruct
+    actual var samplerBorderColor: WGPUSamplerBorderColor
+    actual override val handler: NativeAddress
+    actual companion object {
+        val layout: java.lang.foreign.GroupLayout = java.lang.foreign.MemoryLayout.structLayout(
+            java.lang.foreign.MemoryLayout.structLayout(ValueLayout.ADDRESS.withByteAlignment(8).withName("next"), ValueLayout.JAVA_INT.withByteAlignment(4).withName("sType"), java.lang.foreign.MemoryLayout.paddingLayout(4)).withByteAlignment(8).withName("WGPUChainedStruct").withName("chain"),
+            ValueLayout.JAVA_INT.withByteAlignment(4).withName("samplerBorderColor"),
+            java.lang.foreign.MemoryLayout.paddingLayout(4)
+        ).withByteAlignment(8).withName("WGPUSamplerDescriptorExtras")
+        
+        val samplerBorderColor_VH: VarHandle = layout.varHandle(groupElement("samplerBorderColor"))
+        
+        actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptorExtras = ByReference(address)
+        actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptorExtras = ByReference(allocator.allocate(layout.byteSize()))
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerDescriptorExtras) -> Unit): ArrayHolder<WGPUSamplerDescriptorExtras> {
+            val byteSize = layout.byteSize()
+            val segment = allocator.allocate(byteSize * size.toLong())
+            for (i in 0 until size.toInt()) {
+                val slice = segment.handler.asSlice(i.toLong() * byteSize, byteSize).let(::NativeAddress)
+                provider(i.toUInt(), ByReference(slice))
+            }
+            return ArrayHolder(segment)
+        }
+    }
+    
+    @JvmInline
+    value class ByReference(override val handler: NativeAddress) : WGPUSamplerDescriptorExtras {
+        override var chain: WGPUChainedStruct
+            get() = WGPUChainedStruct(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())))
+            set(value) {
+                MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
+            }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = (samplerBorderColor_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUSamplerBorderColor
+            set(value) = samplerBorderColor_VH.set(handler.handler, 0L, value.toInt())
+    }
+}
+
 private val wgpuGenerateReport_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS)
 private val wgpuGenerateReport_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuGenerateReport") }
 private val wgpuGenerateReport_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuGenerateReport_ADDR, wgpuGenerateReport_DESC) }
@@ -7965,30 +8049,6 @@ private val wgpuTextureGetNativeMetalTexture_ADDR: MemorySegment by lazy { Kextr
 private val wgpuTextureGetNativeMetalTexture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuTextureGetNativeMetalTexture_ADDR, wgpuTextureGetNativeMetalTexture_DESC) }
 actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
     return (wgpuTextureGetNativeMetalTexture_HANDLE.invokeExact(texture?.handler?.handler ?: MemorySegment.NULL) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
-}
-
-private val wgpuRenderPassEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuRenderPassEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetImmediates") }
-private val wgpuRenderPassEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderPassEncoderSetImmediates_ADDR, wgpuRenderPassEncoderSetImmediates_DESC) }
-actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    wgpuRenderPassEncoderSetImmediates_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), sizeBytes.toInt(), data?.handler ?: MemorySegment.NULL)
-    return
-}
-
-private val wgpuComputePassEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuComputePassEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetImmediates") }
-private val wgpuComputePassEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuComputePassEncoderSetImmediates_ADDR, wgpuComputePassEncoderSetImmediates_DESC) }
-actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    wgpuComputePassEncoderSetImmediates_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), sizeBytes.toInt(), data?.handler ?: MemorySegment.NULL)
-    return
-}
-
-private val wgpuRenderBundleEncoderSetImmediates_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.ADDRESS)
-private val wgpuRenderBundleEncoderSetImmediates_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetImmediates") }
-private val wgpuRenderBundleEncoderSetImmediates_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuRenderBundleEncoderSetImmediates_ADDR, wgpuRenderBundleEncoderSetImmediates_DESC) }
-actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    wgpuRenderBundleEncoderSetImmediates_HANDLE.invokeExact(encoder?.handler?.handler ?: MemorySegment.NULL, offset.toInt(), sizeBytes.toInt(), data?.handler ?: MemorySegment.NULL)
-    return
 }
 
 private val wgpuRenderPassEncoderMultiDrawIndirect_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG, ValueLayout.JAVA_INT)
@@ -8084,6 +8144,21 @@ private val wgpuDeviceStopGraphicsDebuggerCapture_HANDLE: MethodHandle by lazy {
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     wgpuDeviceStopGraphicsDebuggerCapture_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL)
     return
+}
+
+private val wgpuCommandEncoderClearTexture_DESC: FunctionDescriptor = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS)
+private val wgpuCommandEncoderClearTexture_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderClearTexture") }
+private val wgpuCommandEncoderClearTexture_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuCommandEncoderClearTexture_ADDR, wgpuCommandEncoderClearTexture_DESC) }
+actual fun wgpuCommandEncoderClearTexture(commandEncoder: WGPUCommandEncoder?, texture: WGPUTexture?, range: WGPUImageSubresourceRange?): Unit {
+    wgpuCommandEncoderClearTexture_HANDLE.invokeExact(commandEncoder?.handler?.handler ?: MemorySegment.NULL, texture?.handler?.handler ?: MemorySegment.NULL, range?.handler?.handler ?: MemorySegment.NULL)
+    return
+}
+
+private val wgpuDeviceCreateShaderModuleTrusted_DESC: FunctionDescriptor = FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG)
+private val wgpuDeviceCreateShaderModuleTrusted_ADDR: MemorySegment by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateShaderModuleTrusted") }
+private val wgpuDeviceCreateShaderModuleTrusted_HANDLE: MethodHandle by lazy { Linker.nativeLinker().downcallHandle(wgpuDeviceCreateShaderModuleTrusted_ADDR, wgpuDeviceCreateShaderModuleTrusted_DESC) }
+actual fun wgpuDeviceCreateShaderModuleTrusted(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?, runtimeChecks: ULong): WGPUShaderModule? {
+    return (wgpuDeviceCreateShaderModuleTrusted_HANDLE.invokeExact(device?.handler?.handler ?: MemorySegment.NULL, descriptor?.handler?.handler ?: MemorySegment.NULL, runtimeChecks.toLong()) as MemorySegment).takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
 }
 
 @OptIn(CallbackRuntimeApi::class)
