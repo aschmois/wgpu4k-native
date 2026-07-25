@@ -2,8 +2,8 @@ package io.ygdrasil.kffi
 
 import com.sun.jna.Memory
 import com.sun.jna.Pointer
-import java.lang.foreign.NativeString
-import java.lang.foreign.ValueLayout
+import io.ygdrasil.kffi.foreign.NativeString
+import io.ygdrasil.kffi.foreign.ValueLayout
 
 val C_BOOL: ValueLayout = ValueLayout.JAVA_BOOLEAN
 val C_CHAR: ValueLayout = ValueLayout.JAVA_BYTE
@@ -21,7 +21,7 @@ class JnaArena: AutoCloseable {
     private val autoCloseableMemory = mutableListOf<AutoCloseable>()
 
     fun allocate(size: Long): Pointer {
-        return Memory(size)
+        return Memory(size).apply { clear() }
             .also { autoCloseableMemory.add(it) }
     }
 

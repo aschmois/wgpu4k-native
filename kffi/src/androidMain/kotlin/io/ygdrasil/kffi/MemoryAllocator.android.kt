@@ -1,7 +1,7 @@
 package io.ygdrasil.kffi
 
-import java.lang.foreign.SegmentAllocator
-import java.lang.foreign.ValueLayout
+import io.ygdrasil.kffi.foreign.SegmentAllocator
+import io.ygdrasil.kffi.foreign.ValueLayout
 
 actual class MemoryAllocator : AutoCloseable {
 

@@ -25,20 +25,22 @@ actual interface WGPUStringView {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUStringView {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUStringView.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUStringView.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUStringView {
             val ref = io.ygdrasil.wgpu.android.WGPUStringView.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUStringView) -> Unit): ArrayHolder<WGPUStringView> {
-            val ref = io.ygdrasil.wgpu.android.WGPUStringView.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUStringView.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUStringView.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUStringView.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUStringView.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -149,20 +151,22 @@ actual interface WGPUChainedStruct {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUChainedStruct {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUChainedStruct {
             val ref = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUChainedStruct) -> Unit): ArrayHolder<WGPUChainedStruct> {
-            val ref = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUChainedStruct.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -207,20 +211,22 @@ actual interface WGPUBufferMapCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBufferMapCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBufferMapCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBufferMapCallbackInfo) -> Unit): ArrayHolder<WGPUBufferMapCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBufferMapCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -283,20 +289,22 @@ actual interface WGPUCompilationInfoCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCompilationInfoCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfoCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUCompilationInfoCallbackInfo) -> Unit): ArrayHolder<WGPUCompilationInfoCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCompilationInfoCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -359,20 +367,22 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCreateComputePipelineAsyncCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUCreateComputePipelineAsyncCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUCreateComputePipelineAsyncCallbackInfo) -> Unit): ArrayHolder<WGPUCreateComputePipelineAsyncCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCreateComputePipelineAsyncCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -435,20 +445,22 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCreateRenderPipelineAsyncCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUCreateRenderPipelineAsyncCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUCreateRenderPipelineAsyncCallbackInfo) -> Unit): ArrayHolder<WGPUCreateRenderPipelineAsyncCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCreateRenderPipelineAsyncCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -511,20 +523,22 @@ actual interface WGPUDeviceLostCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUDeviceLostCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUDeviceLostCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUDeviceLostCallbackInfo) -> Unit): ArrayHolder<WGPUDeviceLostCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUDeviceLostCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -587,20 +601,22 @@ actual interface WGPUPopErrorScopeCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUPopErrorScopeCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUPopErrorScopeCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPopErrorScopeCallbackInfo) -> Unit): ArrayHolder<WGPUPopErrorScopeCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPopErrorScopeCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -663,20 +679,22 @@ actual interface WGPUQueueWorkDoneCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUQueueWorkDoneCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUQueueWorkDoneCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUQueueWorkDoneCallbackInfo) -> Unit): ArrayHolder<WGPUQueueWorkDoneCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUQueueWorkDoneCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -739,20 +757,22 @@ actual interface WGPURequestAdapterCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURequestAdapterCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURequestAdapterCallbackInfo) -> Unit): ArrayHolder<WGPURequestAdapterCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURequestAdapterCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -815,20 +835,22 @@ actual interface WGPURequestDeviceCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURequestDeviceCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURequestDeviceCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURequestDeviceCallbackInfo) -> Unit): ArrayHolder<WGPURequestDeviceCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURequestDeviceCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -890,20 +912,22 @@ actual interface WGPUUncapturedErrorCallbackInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUUncapturedErrorCallbackInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUUncapturedErrorCallbackInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUUncapturedErrorCallbackInfo) -> Unit): ArrayHolder<WGPUUncapturedErrorCallbackInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUUncapturedErrorCallbackInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -966,20 +990,22 @@ actual interface WGPUAdapterInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUAdapterInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUAdapterInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUAdapterInfo) -> Unit): ArrayHolder<WGPUAdapterInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUAdapterInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1140,20 +1166,22 @@ actual interface WGPUBlendComponent {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBlendComponent {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBlendComponent.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBlendComponent.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBlendComponent {
             val ref = io.ygdrasil.wgpu.android.WGPUBlendComponent.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBlendComponent) -> Unit): ArrayHolder<WGPUBlendComponent> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBlendComponent.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1203,20 +1231,22 @@ actual interface WGPUBufferBindingLayout {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBufferBindingLayout {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBufferBindingLayout {
             val ref = io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBufferBindingLayout) -> Unit): ArrayHolder<WGPUBufferBindingLayout> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBufferBindingLayout.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1273,20 +1303,22 @@ actual interface WGPUBufferDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBufferDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBufferDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBufferDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBufferDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUBufferDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBufferDescriptor) -> Unit): ArrayHolder<WGPUBufferDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBufferDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBufferDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBufferDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBufferDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBufferDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1364,20 +1396,22 @@ actual interface WGPUColor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUColor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUColor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUColor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUColor {
             val ref = io.ygdrasil.wgpu.android.WGPUColor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUColor) -> Unit): ArrayHolder<WGPUColor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUColor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUColor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUColor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUColor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUColor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1431,20 +1465,22 @@ actual interface WGPUCommandBufferDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCommandBufferDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUCommandBufferDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUCommandBufferDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUCommandBufferDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUCommandBufferDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUCommandBufferDescriptor) -> Unit): ArrayHolder<WGPUCommandBufferDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUCommandBufferDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUCommandBufferDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUCommandBufferDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCommandBufferDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCommandBufferDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1502,20 +1538,22 @@ actual interface WGPUCommandEncoderDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCommandEncoderDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUCommandEncoderDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUCommandEncoderDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUCommandEncoderDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUCommandEncoderDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUCommandEncoderDescriptor) -> Unit): ArrayHolder<WGPUCommandEncoderDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUCommandEncoderDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUCommandEncoderDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUCommandEncoderDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCommandEncoderDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCommandEncoderDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1576,20 +1614,22 @@ actual interface WGPUCompatibilityModeLimits {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCompatibilityModeLimits {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUCompatibilityModeLimits {
             val ref = io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUCompatibilityModeLimits) -> Unit): ArrayHolder<WGPUCompatibilityModeLimits> {
-            val ref = io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCompatibilityModeLimits.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1670,20 +1710,22 @@ actual interface WGPUCompilationMessage {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCompilationMessage {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUCompilationMessage.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUCompilationMessage.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUCompilationMessage {
             val ref = io.ygdrasil.wgpu.android.WGPUCompilationMessage.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUCompilationMessage) -> Unit): ArrayHolder<WGPUCompilationMessage> {
-            val ref = io.ygdrasil.wgpu.android.WGPUCompilationMessage.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUCompilationMessage.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUCompilationMessage.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCompilationMessage.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCompilationMessage.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1772,20 +1814,22 @@ actual interface WGPUConstantEntry {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUConstantEntry {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUConstantEntry.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUConstantEntry.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUConstantEntry {
             val ref = io.ygdrasil.wgpu.android.WGPUConstantEntry.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUConstantEntry) -> Unit): ArrayHolder<WGPUConstantEntry> {
-            val ref = io.ygdrasil.wgpu.android.WGPUConstantEntry.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUConstantEntry.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUConstantEntry.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUConstantEntry.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUConstantEntry.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1850,20 +1894,22 @@ actual interface WGPUExtent3D {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUExtent3D {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUExtent3D.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUExtent3D.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUExtent3D {
             val ref = io.ygdrasil.wgpu.android.WGPUExtent3D.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUExtent3D) -> Unit): ArrayHolder<WGPUExtent3D> {
-            val ref = io.ygdrasil.wgpu.android.WGPUExtent3D.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUExtent3D.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUExtent3D.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUExtent3D.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUExtent3D.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1911,20 +1957,22 @@ actual interface WGPUExternalTextureBindingEntry {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUExternalTextureBindingEntry {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUExternalTextureBindingEntry {
             val ref = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUExternalTextureBindingEntry) -> Unit): ArrayHolder<WGPUExternalTextureBindingEntry> {
-            val ref = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUExternalTextureBindingEntry.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -1981,20 +2029,22 @@ actual interface WGPUExternalTextureBindingLayout {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUExternalTextureBindingLayout {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUExternalTextureBindingLayout {
             val ref = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUExternalTextureBindingLayout) -> Unit): ArrayHolder<WGPUExternalTextureBindingLayout> {
-            val ref = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUExternalTextureBindingLayout.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2045,20 +2095,22 @@ actual interface WGPUFuture {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUFuture {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUFuture.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUFuture.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUFuture {
             val ref = io.ygdrasil.wgpu.android.WGPUFuture.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUFuture) -> Unit): ArrayHolder<WGPUFuture> {
-            val ref = io.ygdrasil.wgpu.android.WGPUFuture.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUFuture.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUFuture.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUFuture.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUFuture.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2094,20 +2146,22 @@ actual interface WGPUInstanceLimits {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUInstanceLimits {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUInstanceLimits.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUInstanceLimits.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUInstanceLimits {
             val ref = io.ygdrasil.wgpu.android.WGPUInstanceLimits.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUInstanceLimits) -> Unit): ArrayHolder<WGPUInstanceLimits> {
-            val ref = io.ygdrasil.wgpu.android.WGPUInstanceLimits.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUInstanceLimits.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUInstanceLimits.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUInstanceLimits.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUInstanceLimits.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2151,20 +2205,22 @@ actual interface WGPUMultisampleState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUMultisampleState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUMultisampleState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUMultisampleState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUMultisampleState {
             val ref = io.ygdrasil.wgpu.android.WGPUMultisampleState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUMultisampleState) -> Unit): ArrayHolder<WGPUMultisampleState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUMultisampleState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUMultisampleState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUMultisampleState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUMultisampleState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUMultisampleState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2219,20 +2275,22 @@ actual interface WGPUOrigin3D {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUOrigin3D {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUOrigin3D.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUOrigin3D.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUOrigin3D {
             val ref = io.ygdrasil.wgpu.android.WGPUOrigin3D.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUOrigin3D) -> Unit): ArrayHolder<WGPUOrigin3D> {
-            val ref = io.ygdrasil.wgpu.android.WGPUOrigin3D.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUOrigin3D.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUOrigin3D.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUOrigin3D.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUOrigin3D.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2282,20 +2340,22 @@ actual interface WGPUPassTimestampWrites {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUPassTimestampWrites {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUPassTimestampWrites.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUPassTimestampWrites.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUPassTimestampWrites {
             val ref = io.ygdrasil.wgpu.android.WGPUPassTimestampWrites.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPassTimestampWrites) -> Unit): ArrayHolder<WGPUPassTimestampWrites> {
-            val ref = io.ygdrasil.wgpu.android.WGPUPassTimestampWrites.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUPassTimestampWrites.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUPassTimestampWrites.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPassTimestampWrites.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPassTimestampWrites.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2352,20 +2412,22 @@ actual interface WGPUPipelineLayoutDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUPipelineLayoutDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUPipelineLayoutDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUPipelineLayoutDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUPipelineLayoutDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPipelineLayoutDescriptor) -> Unit): ArrayHolder<WGPUPipelineLayoutDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUPipelineLayoutDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUPipelineLayoutDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUPipelineLayoutDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPipelineLayoutDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPipelineLayoutDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2445,20 +2507,22 @@ actual interface WGPUPrimitiveState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUPrimitiveState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUPrimitiveState {
             val ref = io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPrimitiveState) -> Unit): ArrayHolder<WGPUPrimitiveState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPrimitiveState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2526,20 +2590,22 @@ actual interface WGPUQuerySetDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUQuerySetDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUQuerySetDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUQuerySetDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUQuerySetDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUQuerySetDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUQuerySetDescriptor) -> Unit): ArrayHolder<WGPUQuerySetDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUQuerySetDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUQuerySetDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUQuerySetDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUQuerySetDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUQuerySetDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2609,20 +2675,22 @@ actual interface WGPUQueueDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUQueueDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUQueueDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUQueueDescriptor) -> Unit): ArrayHolder<WGPUQueueDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUQueueDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2680,20 +2748,22 @@ actual interface WGPURenderBundleDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURenderBundleDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURenderBundleDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURenderBundleDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPURenderBundleDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURenderBundleDescriptor) -> Unit): ArrayHolder<WGPURenderBundleDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPURenderBundleDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURenderBundleDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURenderBundleDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderBundleDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderBundleDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2757,20 +2827,22 @@ actual interface WGPURenderBundleEncoderDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURenderBundleEncoderDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURenderBundleEncoderDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURenderBundleEncoderDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURenderBundleEncoderDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPURenderBundleEncoderDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURenderBundleEncoderDescriptor) -> Unit): ArrayHolder<WGPURenderBundleEncoderDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPURenderBundleEncoderDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURenderBundleEncoderDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURenderBundleEncoderDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderBundleEncoderDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderBundleEncoderDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2872,20 +2944,22 @@ actual interface WGPURenderPassDepthStencilAttachment {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURenderPassDepthStencilAttachment {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPassDepthStencilAttachment.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPassDepthStencilAttachment.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURenderPassDepthStencilAttachment {
             val ref = io.ygdrasil.wgpu.android.WGPURenderPassDepthStencilAttachment.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURenderPassDepthStencilAttachment) -> Unit): ArrayHolder<WGPURenderPassDepthStencilAttachment> {
-            val ref = io.ygdrasil.wgpu.android.WGPURenderPassDepthStencilAttachment.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURenderPassDepthStencilAttachment.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURenderPassDepthStencilAttachment.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPassDepthStencilAttachment.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPassDepthStencilAttachment.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -2975,20 +3049,22 @@ actual interface WGPURenderPassMaxDrawCount {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURenderPassMaxDrawCount {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURenderPassMaxDrawCount {
             val ref = io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURenderPassMaxDrawCount) -> Unit): ArrayHolder<WGPURenderPassMaxDrawCount> {
-            val ref = io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPassMaxDrawCount.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3046,20 +3122,22 @@ actual interface WGPURequestAdapterWebXROptions {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURequestAdapterWebXROptions {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterWebXROptions {
             val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURequestAdapterWebXROptions) -> Unit): ArrayHolder<WGPURequestAdapterWebXROptions> {
-            val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURequestAdapterWebXROptions.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3117,20 +3195,22 @@ actual interface WGPUSamplerBindingLayout {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSamplerBindingLayout {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSamplerBindingLayout {
             val ref = io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerBindingLayout) -> Unit): ArrayHolder<WGPUSamplerBindingLayout> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSamplerBindingLayout.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3182,20 +3262,22 @@ actual interface WGPUSamplerDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSamplerDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSamplerDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUSamplerDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerDescriptor) -> Unit): ArrayHolder<WGPUSamplerDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSamplerDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSamplerDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSamplerDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSamplerDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSamplerDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3314,20 +3396,22 @@ actual interface WGPUShaderSourceSPIRV {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderSourceSPIRV {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceSPIRV {
             val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUShaderSourceSPIRV) -> Unit): ArrayHolder<WGPUShaderSourceSPIRV> {
-            val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderSourceSPIRV.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3391,20 +3475,22 @@ actual interface WGPUShaderSourceWGSL {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderSourceWGSL {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceWGSL {
             val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUShaderSourceWGSL) -> Unit): ArrayHolder<WGPUShaderSourceWGSL> {
-            val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderSourceWGSL.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3480,20 +3566,22 @@ actual interface WGPUStencilFaceState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUStencilFaceState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUStencilFaceState {
             val ref = io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUStencilFaceState) -> Unit): ArrayHolder<WGPUStencilFaceState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUStencilFaceState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3549,20 +3637,22 @@ actual interface WGPUStorageTextureBindingLayout {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUStorageTextureBindingLayout {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUStorageTextureBindingLayout {
             val ref = io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUStorageTextureBindingLayout) -> Unit): ArrayHolder<WGPUStorageTextureBindingLayout> {
-            val ref = io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUStorageTextureBindingLayout.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3616,20 +3706,22 @@ actual interface WGPUSupportedFeatures {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedFeatures {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSupportedFeatures {
             val ref = io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSupportedFeatures) -> Unit): ArrayHolder<WGPUSupportedFeatures> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSupportedFeatures.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3671,20 +3763,22 @@ actual interface WGPUSupportedInstanceFeatures {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedInstanceFeatures {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSupportedInstanceFeatures {
             val ref = io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSupportedInstanceFeatures) -> Unit): ArrayHolder<WGPUSupportedInstanceFeatures> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSupportedInstanceFeatures.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3726,20 +3820,22 @@ actual interface WGPUSupportedWGSLLanguageFeatures {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSupportedWGSLLanguageFeatures {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSupportedWGSLLanguageFeatures {
             val ref = io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSupportedWGSLLanguageFeatures) -> Unit): ArrayHolder<WGPUSupportedWGSLLanguageFeatures> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSupportedWGSLLanguageFeatures.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3787,20 +3883,22 @@ actual interface WGPUSurfaceCapabilities {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceCapabilities {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceCapabilities {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceCapabilities) -> Unit): ArrayHolder<WGPUSurfaceCapabilities> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceCapabilities.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3879,20 +3977,22 @@ actual interface WGPUSurfaceColorManagement {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceColorManagement {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceColorManagement {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceColorManagement) -> Unit): ArrayHolder<WGPUSurfaceColorManagement> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceColorManagement.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -3964,20 +4064,22 @@ actual interface WGPUSurfaceConfiguration {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceConfiguration {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceConfiguration.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceConfiguration.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceConfiguration {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceConfiguration.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceConfiguration) -> Unit): ArrayHolder<WGPUSurfaceConfiguration> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceConfiguration.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceConfiguration.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceConfiguration.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceConfiguration.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceConfiguration.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4067,20 +4169,22 @@ actual interface WGPUSurfaceSourceAndroidNativeWindow {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceAndroidNativeWindow {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceAndroidNativeWindow {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceSourceAndroidNativeWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceAndroidNativeWindow> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceAndroidNativeWindow.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4138,20 +4242,22 @@ actual interface WGPUSurfaceSourceMetalLayer {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceMetalLayer {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceMetalLayer {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceSourceMetalLayer) -> Unit): ArrayHolder<WGPUSurfaceSourceMetalLayer> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceMetalLayer.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4210,20 +4316,22 @@ actual interface WGPUSurfaceSourceWaylandSurface {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWaylandSurface {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceWaylandSurface {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceSourceWaylandSurface) -> Unit): ArrayHolder<WGPUSurfaceSourceWaylandSurface> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceWaylandSurface.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4288,20 +4396,22 @@ actual interface WGPUSurfaceSourceWindowsHWND {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceWindowsHWND {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceWindowsHWND {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceSourceWindowsHWND) -> Unit): ArrayHolder<WGPUSurfaceSourceWindowsHWND> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceWindowsHWND.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4366,20 +4476,22 @@ actual interface WGPUSurfaceSourceXCBWindow {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceXCBWindow {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceXCBWindow {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceSourceXCBWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceXCBWindow> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceXCBWindow.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4444,20 +4556,22 @@ actual interface WGPUSurfaceSourceXlibWindow {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceXlibWindow {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceXlibWindow {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceSourceXlibWindow) -> Unit): ArrayHolder<WGPUSurfaceSourceXlibWindow> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceXlibWindow.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4522,20 +4636,22 @@ actual interface WGPUSurfaceTexture {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceTexture {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceTexture.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceTexture.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceTexture {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceTexture.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceTexture) -> Unit): ArrayHolder<WGPUSurfaceTexture> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceTexture.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceTexture.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceTexture.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceTexture.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceTexture.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4584,20 +4700,22 @@ actual interface WGPUTexelCopyBufferLayout {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTexelCopyBufferLayout {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyBufferLayout {
             val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTexelCopyBufferLayout) -> Unit): ArrayHolder<WGPUTexelCopyBufferLayout> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTexelCopyBufferLayout.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4647,20 +4765,22 @@ actual interface WGPUTextureBindingLayout {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTextureBindingLayout {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTextureBindingLayout {
             val ref = io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTextureBindingLayout) -> Unit): ArrayHolder<WGPUTextureBindingLayout> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureBindingLayout.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4714,20 +4834,22 @@ actual interface WGPUTextureBindingViewDimension {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTextureBindingViewDimension {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTextureBindingViewDimension {
             val ref = io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTextureBindingViewDimension) -> Unit): ArrayHolder<WGPUTextureBindingViewDimension> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureBindingViewDimension.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4787,20 +4909,22 @@ actual interface WGPUTextureComponentSwizzle {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTextureComponentSwizzle {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTextureComponentSwizzle {
             val ref = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTextureComponentSwizzle) -> Unit): ArrayHolder<WGPUTextureComponentSwizzle> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzle.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4856,20 +4980,22 @@ actual interface WGPUVertexAttribute {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUVertexAttribute {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUVertexAttribute.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUVertexAttribute.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUVertexAttribute {
             val ref = io.ygdrasil.wgpu.android.WGPUVertexAttribute.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUVertexAttribute) -> Unit): ArrayHolder<WGPUVertexAttribute> {
-            val ref = io.ygdrasil.wgpu.android.WGPUVertexAttribute.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUVertexAttribute.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUVertexAttribute.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUVertexAttribute.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUVertexAttribute.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -4928,20 +5054,22 @@ actual interface WGPUBindGroupEntry {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBindGroupEntry {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupEntry.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupEntry.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupEntry {
             val ref = io.ygdrasil.wgpu.android.WGPUBindGroupEntry.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBindGroupEntry) -> Unit): ArrayHolder<WGPUBindGroupEntry> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupEntry.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupEntry.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBindGroupEntry.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupEntry.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupEntry.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5019,20 +5147,22 @@ actual interface WGPUBindGroupLayoutEntry {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBindGroupLayoutEntry {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntry.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntry.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutEntry {
             val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntry.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBindGroupLayoutEntry) -> Unit): ArrayHolder<WGPUBindGroupLayoutEntry> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntry.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntry.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntry.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntry.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntry.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5174,20 +5304,22 @@ actual interface WGPUBlendState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBlendState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBlendState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBlendState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBlendState {
             val ref = io.ygdrasil.wgpu.android.WGPUBlendState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBlendState) -> Unit): ArrayHolder<WGPUBlendState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBlendState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBlendState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBlendState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBlendState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBlendState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5262,20 +5394,22 @@ actual interface WGPUCompilationInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUCompilationInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUCompilationInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUCompilationInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUCompilationInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUCompilationInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUCompilationInfo) -> Unit): ArrayHolder<WGPUCompilationInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUCompilationInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUCompilationInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUCompilationInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCompilationInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUCompilationInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5324,20 +5458,22 @@ actual interface WGPUComputePassDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUComputePassDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUComputePassDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUComputePassDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUComputePassDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUComputePassDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUComputePassDescriptor) -> Unit): ArrayHolder<WGPUComputePassDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUComputePassDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUComputePassDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUComputePassDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUComputePassDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUComputePassDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5404,20 +5540,22 @@ actual interface WGPUComputeState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUComputeState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUComputeState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUComputeState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUComputeState {
             val ref = io.ygdrasil.wgpu.android.WGPUComputeState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUComputeState) -> Unit): ArrayHolder<WGPUComputeState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUComputeState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUComputeState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUComputeState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUComputeState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUComputeState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5502,20 +5640,22 @@ actual interface WGPUDepthStencilState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUDepthStencilState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUDepthStencilState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUDepthStencilState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUDepthStencilState {
             val ref = io.ygdrasil.wgpu.android.WGPUDepthStencilState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUDepthStencilState) -> Unit): ArrayHolder<WGPUDepthStencilState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUDepthStencilState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUDepthStencilState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUDepthStencilState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUDepthStencilState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUDepthStencilState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5643,20 +5783,22 @@ actual interface WGPUFutureWaitInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUFutureWaitInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUFutureWaitInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUFutureWaitInfo) -> Unit): ArrayHolder<WGPUFutureWaitInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUFutureWaitInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5716,20 +5858,22 @@ actual interface WGPUInstanceDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUInstanceDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUInstanceDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUInstanceDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUInstanceDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUInstanceDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUInstanceDescriptor) -> Unit): ArrayHolder<WGPUInstanceDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUInstanceDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUInstanceDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUInstanceDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUInstanceDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUInstanceDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -5814,20 +5958,22 @@ actual interface WGPULimits {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPULimits {
-            return ByReference(io.ygdrasil.wgpu.android.WGPULimits.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPULimits.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPULimits {
             val ref = io.ygdrasil.wgpu.android.WGPULimits.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPULimits) -> Unit): ArrayHolder<WGPULimits> {
-            val ref = io.ygdrasil.wgpu.android.WGPULimits.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPULimits.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPULimits.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPULimits.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPULimits.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6060,20 +6206,22 @@ actual interface WGPURenderPassColorAttachment {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURenderPassColorAttachment {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPassColorAttachment.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPassColorAttachment.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURenderPassColorAttachment {
             val ref = io.ygdrasil.wgpu.android.WGPURenderPassColorAttachment.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURenderPassColorAttachment) -> Unit): ArrayHolder<WGPURenderPassColorAttachment> {
-            val ref = io.ygdrasil.wgpu.android.WGPURenderPassColorAttachment.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURenderPassColorAttachment.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURenderPassColorAttachment.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPassColorAttachment.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPassColorAttachment.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6165,20 +6313,22 @@ actual interface WGPURequestAdapterOptions {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURequestAdapterOptions {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURequestAdapterOptions.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURequestAdapterOptions.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURequestAdapterOptions {
             val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterOptions.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURequestAdapterOptions) -> Unit): ArrayHolder<WGPURequestAdapterOptions> {
-            val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterOptions.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURequestAdapterOptions.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURequestAdapterOptions.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURequestAdapterOptions.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURequestAdapterOptions.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6244,20 +6394,22 @@ actual interface WGPUShaderModuleDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderModuleDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUShaderModuleDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUShaderModuleDescriptor) -> Unit): ArrayHolder<WGPUShaderModuleDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6315,20 +6467,22 @@ actual interface WGPUSurfaceDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceDescriptor) -> Unit): ArrayHolder<WGPUSurfaceDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6386,20 +6540,22 @@ actual interface WGPUTexelCopyBufferInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTexelCopyBufferInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyBufferInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTexelCopyBufferInfo) -> Unit): ArrayHolder<WGPUTexelCopyBufferInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTexelCopyBufferInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6459,20 +6615,22 @@ actual interface WGPUTexelCopyTextureInfo {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTexelCopyTextureInfo {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTexelCopyTextureInfo.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTexelCopyTextureInfo.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTexelCopyTextureInfo {
             val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyTextureInfo.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTexelCopyTextureInfo) -> Unit): ArrayHolder<WGPUTexelCopyTextureInfo> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyTextureInfo.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTexelCopyTextureInfo.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTexelCopyTextureInfo.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTexelCopyTextureInfo.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTexelCopyTextureInfo.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6542,20 +6700,22 @@ actual interface WGPUTextureComponentSwizzleDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTextureComponentSwizzleDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTextureComponentSwizzleDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTextureComponentSwizzleDescriptor) -> Unit): ArrayHolder<WGPUTextureComponentSwizzleDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureComponentSwizzleDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6637,20 +6797,22 @@ actual interface WGPUTextureDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTextureDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTextureDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUTextureDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTextureDescriptor) -> Unit): ArrayHolder<WGPUTextureDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTextureDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTextureDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTextureDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6775,20 +6937,22 @@ actual interface WGPUVertexBufferLayout {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUVertexBufferLayout {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUVertexBufferLayout.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUVertexBufferLayout.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUVertexBufferLayout {
             val ref = io.ygdrasil.wgpu.android.WGPUVertexBufferLayout.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUVertexBufferLayout) -> Unit): ArrayHolder<WGPUVertexBufferLayout> {
-            val ref = io.ygdrasil.wgpu.android.WGPUVertexBufferLayout.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUVertexBufferLayout.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUVertexBufferLayout.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUVertexBufferLayout.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUVertexBufferLayout.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6851,20 +7015,22 @@ actual interface WGPUBindGroupDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBindGroupDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUBindGroupDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBindGroupDescriptor) -> Unit): ArrayHolder<WGPUBindGroupDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBindGroupDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -6942,20 +7108,22 @@ actual interface WGPUBindGroupLayoutDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBindGroupLayoutDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupLayoutDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupLayoutDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBindGroupLayoutDescriptor) -> Unit): ArrayHolder<WGPUBindGroupLayoutDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBindGroupLayoutDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupLayoutDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupLayoutDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -7027,20 +7195,22 @@ actual interface WGPUColorTargetState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUColorTargetState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUColorTargetState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUColorTargetState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUColorTargetState {
             val ref = io.ygdrasil.wgpu.android.WGPUColorTargetState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUColorTargetState) -> Unit): ArrayHolder<WGPUColorTargetState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUColorTargetState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUColorTargetState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUColorTargetState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUColorTargetState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUColorTargetState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -7096,20 +7266,22 @@ actual interface WGPUComputePipelineDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUComputePipelineDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUComputePipelineDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUComputePipelineDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUComputePipelineDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUComputePipelineDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUComputePipelineDescriptor) -> Unit): ArrayHolder<WGPUComputePipelineDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUComputePipelineDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUComputePipelineDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUComputePipelineDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUComputePipelineDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUComputePipelineDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -7201,20 +7373,22 @@ actual interface WGPUDeviceDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUDeviceDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUDeviceDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUDeviceDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUDeviceDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUDeviceDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUDeviceDescriptor) -> Unit): ArrayHolder<WGPUDeviceDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUDeviceDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUDeviceDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUDeviceDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUDeviceDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUDeviceDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -7361,20 +7535,22 @@ actual interface WGPURenderPassDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURenderPassDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPassDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPassDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURenderPassDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPURenderPassDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURenderPassDescriptor) -> Unit): ArrayHolder<WGPURenderPassDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPURenderPassDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURenderPassDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURenderPassDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPassDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPassDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -7470,20 +7646,22 @@ actual interface WGPUTextureViewDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUTextureViewDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureViewDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUTextureViewDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUTextureViewDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPUTextureViewDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUTextureViewDescriptor) -> Unit): ArrayHolder<WGPUTextureViewDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPUTextureViewDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUTextureViewDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUTextureViewDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureViewDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUTextureViewDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -7594,20 +7772,22 @@ actual interface WGPUVertexState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUVertexState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUVertexState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUVertexState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUVertexState {
             val ref = io.ygdrasil.wgpu.android.WGPUVertexState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUVertexState) -> Unit): ArrayHolder<WGPUVertexState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUVertexState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUVertexState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUVertexState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUVertexState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUVertexState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -7700,20 +7880,22 @@ actual interface WGPUFragmentState {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUFragmentState {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUFragmentState.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUFragmentState.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUFragmentState {
             val ref = io.ygdrasil.wgpu.android.WGPUFragmentState.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUFragmentState) -> Unit): ArrayHolder<WGPUFragmentState> {
-            val ref = io.ygdrasil.wgpu.android.WGPUFragmentState.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUFragmentState.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUFragmentState.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUFragmentState.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUFragmentState.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -7807,20 +7989,22 @@ actual interface WGPURenderPipelineDescriptor {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURenderPipelineDescriptor {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPipelineDescriptor.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURenderPipelineDescriptor.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURenderPipelineDescriptor {
             val ref = io.ygdrasil.wgpu.android.WGPURenderPipelineDescriptor.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURenderPipelineDescriptor) -> Unit): ArrayHolder<WGPURenderPipelineDescriptor> {
-            val ref = io.ygdrasil.wgpu.android.WGPURenderPipelineDescriptor.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURenderPipelineDescriptor.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURenderPipelineDescriptor.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPipelineDescriptor.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURenderPipelineDescriptor.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -8921,20 +9105,22 @@ actual interface WGPUXlibDisplayHandle {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUXlibDisplayHandle {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUXlibDisplayHandle {
             val ref = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUXlibDisplayHandle) -> Unit): ArrayHolder<WGPUXlibDisplayHandle> {
-            val ref = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUXlibDisplayHandle.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -8976,20 +9162,22 @@ actual interface WGPUXcbDisplayHandle {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUXcbDisplayHandle {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUXcbDisplayHandle {
             val ref = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUXcbDisplayHandle) -> Unit): ArrayHolder<WGPUXcbDisplayHandle> {
-            val ref = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUXcbDisplayHandle.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9030,20 +9218,22 @@ actual interface WGPUWaylandDisplayHandle {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUWaylandDisplayHandle {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUWaylandDisplayHandle {
             val ref = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUWaylandDisplayHandle) -> Unit): ArrayHolder<WGPUWaylandDisplayHandle> {
-            val ref = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUWaylandDisplayHandle.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9083,16 +9273,18 @@ actual interface WGPUNativeDisplayHandle {
     actual fun setWayland(value: WGPUWaylandDisplayHandle)
     actual val handler: NativeAddress
     actual companion object {
-        actual operator fun invoke(address: NativeAddress): WGPUNativeDisplayHandle = ByReference(io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByReference(address))
+        actual operator fun invoke(address: NativeAddress): WGPUNativeDisplayHandle = ByReference(io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByReference(address).also { it.read() })
         actual fun allocate(allocator: MemoryAllocator): WGPUNativeDisplayHandle {
             val ref = io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUNativeDisplayHandle) -> Unit): ArrayHolder<WGPUNativeDisplayHandle> {
-            val ref = io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
-            array.forEachIndexed { index, struct -> provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByValue)) }
+            array.forEachIndexed { index, struct -> struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUNativeDisplayHandle.ByValue)); struct.write() }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
         }
@@ -9225,20 +9417,22 @@ actual interface WGPUInstanceExtras {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUInstanceExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUInstanceExtras {
             val ref = io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUInstanceExtras) -> Unit): ArrayHolder<WGPUInstanceExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUInstanceExtras.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9388,20 +9582,22 @@ actual interface WGPUDeviceExtras {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUDeviceExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUDeviceExtras {
             val ref = io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUDeviceExtras) -> Unit): ArrayHolder<WGPUDeviceExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUDeviceExtras.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9478,20 +9674,22 @@ actual interface WGPUNativeLimits {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUNativeLimits {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUNativeLimits.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUNativeLimits.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUNativeLimits {
             val ref = io.ygdrasil.wgpu.android.WGPUNativeLimits.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUNativeLimits) -> Unit): ArrayHolder<WGPUNativeLimits> {
-            val ref = io.ygdrasil.wgpu.android.WGPUNativeLimits.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUNativeLimits.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUNativeLimits.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUNativeLimits.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUNativeLimits.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9567,20 +9765,22 @@ actual interface WGPUShaderDefine {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderDefine {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderDefine.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderDefine.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUShaderDefine {
             val ref = io.ygdrasil.wgpu.android.WGPUShaderDefine.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUShaderDefine) -> Unit): ArrayHolder<WGPUShaderDefine> {
-            val ref = io.ygdrasil.wgpu.android.WGPUShaderDefine.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUShaderDefine.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUShaderDefine.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderDefine.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderDefine.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9657,20 +9857,22 @@ actual interface WGPUShaderSourceGLSL {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderSourceGLSL {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUShaderSourceGLSL {
             val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUShaderSourceGLSL) -> Unit): ArrayHolder<WGPUShaderSourceGLSL> {
-            val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderSourceGLSL.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9763,20 +9965,22 @@ actual interface WGPUShaderModuleDescriptorSpirV {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUShaderModuleDescriptorSpirV {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUShaderModuleDescriptorSpirV {
             val ref = io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUShaderModuleDescriptorSpirV) -> Unit): ArrayHolder<WGPUShaderModuleDescriptorSpirV> {
-            val ref = io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUShaderModuleDescriptorSpirV.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9842,20 +10046,22 @@ actual interface WGPURegistryReport {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPURegistryReport {
-            return ByReference(io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPURegistryReport {
             val ref = io.ygdrasil.wgpu.android.WGPURegistryReport.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPURegistryReport) -> Unit): ArrayHolder<WGPURegistryReport> {
-            val ref = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPURegistryReport.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -9924,20 +10130,22 @@ actual interface WGPUHubReport {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUHubReport {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUHubReport.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUHubReport.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUHubReport {
             val ref = io.ygdrasil.wgpu.android.WGPUHubReport.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUHubReport) -> Unit): ArrayHolder<WGPUHubReport> {
-            val ref = io.ygdrasil.wgpu.android.WGPUHubReport.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUHubReport.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUHubReport.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUHubReport.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUHubReport.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10341,20 +10549,22 @@ actual interface WGPUGlobalReport {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUGlobalReport {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUGlobalReport.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUGlobalReport.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUGlobalReport {
             val ref = io.ygdrasil.wgpu.android.WGPUGlobalReport.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUGlobalReport) -> Unit): ArrayHolder<WGPUGlobalReport> {
-            val ref = io.ygdrasil.wgpu.android.WGPUGlobalReport.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUGlobalReport.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUGlobalReport.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUGlobalReport.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUGlobalReport.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10428,20 +10638,22 @@ actual interface WGPUInstanceEnumerateAdapterOptions {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUInstanceEnumerateAdapterOptions {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUInstanceEnumerateAdapterOptions.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUInstanceEnumerateAdapterOptions.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUInstanceEnumerateAdapterOptions {
             val ref = io.ygdrasil.wgpu.android.WGPUInstanceEnumerateAdapterOptions.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUInstanceEnumerateAdapterOptions) -> Unit): ArrayHolder<WGPUInstanceEnumerateAdapterOptions> {
-            val ref = io.ygdrasil.wgpu.android.WGPUInstanceEnumerateAdapterOptions.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUInstanceEnumerateAdapterOptions.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUInstanceEnumerateAdapterOptions.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUInstanceEnumerateAdapterOptions.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUInstanceEnumerateAdapterOptions.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10488,20 +10700,22 @@ actual interface WGPUBindGroupEntryExtras {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBindGroupEntryExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupEntryExtras {
             val ref = io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBindGroupEntryExtras) -> Unit): ArrayHolder<WGPUBindGroupEntryExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupEntryExtras.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10589,20 +10803,22 @@ actual interface WGPUBindGroupLayoutEntryExtras {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUBindGroupLayoutEntryExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUBindGroupLayoutEntryExtras {
             val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUBindGroupLayoutEntryExtras) -> Unit): ArrayHolder<WGPUBindGroupLayoutEntryExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUBindGroupLayoutEntryExtras.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10661,20 +10877,22 @@ actual interface WGPUQuerySetDescriptorExtras {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUQuerySetDescriptorExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUQuerySetDescriptorExtras {
             val ref = io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUQuerySetDescriptorExtras) -> Unit): ArrayHolder<WGPUQuerySetDescriptorExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUQuerySetDescriptorExtras.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10738,20 +10956,22 @@ actual interface WGPUSurfaceConfigurationExtras {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceConfigurationExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceConfigurationExtras {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceConfigurationExtras) -> Unit): ArrayHolder<WGPUSurfaceConfigurationExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceConfigurationExtras.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10809,20 +11029,22 @@ actual interface WGPUSurfaceSourceSwapChainPanel {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSurfaceSourceSwapChainPanel {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSurfaceSourceSwapChainPanel {
             val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSurfaceSourceSwapChainPanel) -> Unit): ArrayHolder<WGPUSurfaceSourceSwapChainPanel> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSurfaceSourceSwapChainPanel.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10881,20 +11103,22 @@ actual interface WGPUPrimitiveStateExtras {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUPrimitiveStateExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUPrimitiveStateExtras {
             val ref = io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPrimitiveStateExtras) -> Unit): ArrayHolder<WGPUPrimitiveStateExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUPrimitiveStateExtras.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -10961,20 +11185,22 @@ actual interface WGPUImageSubresourceRange {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUImageSubresourceRange {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUImageSubresourceRange {
             val ref = io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageSubresourceRange) -> Unit): ArrayHolder<WGPUImageSubresourceRange> {
-            val ref = io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUImageSubresourceRange.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)
@@ -11034,20 +11260,22 @@ actual interface WGPUSamplerDescriptorExtras {
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptorExtras {
-            return ByReference(io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByReference(address))
+            return ByReference(io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByReference(address).also { it.read() })
         }
         
         actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptorExtras {
             val ref = io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByReference()
+            ref.clear()
             allocator.register(ref)
             return ByReference(ref)
         }
         
         actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerDescriptorExtras) -> Unit): ArrayHolder<WGPUSamplerDescriptorExtras> {
-            val ref = io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue()
+            val ref = io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue(com.sun.jna.Memory(maxOf(1L, io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue().size().toLong() * size.toLong())))
+            allocator.register(ref) // retain for the scope: ArrayHolder keeps only the raw address, and GC of the Memory would free the native block
             val array = ref.toArray(size.toInt())
             array.forEachIndexed { index, struct ->
-                provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue))
+                struct.clear(); struct.read(); /* JNA toArray auto-reads heap garbage into the Java fields; re-read the zeroed memory so write() cannot restage it */ provider(index.toUInt(), ByValue(struct as io.ygdrasil.wgpu.android.WGPUSamplerDescriptorExtras.ByValue)); struct.write()
             }
             val pointer = if (size == 0u) com.sun.jna.Pointer.NULL else array.first().pointer
             return ArrayHolder(pointer)

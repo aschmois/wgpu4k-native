@@ -1,4 +1,4 @@
-package java.lang.foreign
+package io.ygdrasil.kffi.foreign
 
 import com.sun.jna.Memory
 import com.sun.jna.Native

@@ -1,4 +1,4 @@
-package java.lang.foreign
+package io.ygdrasil.kffi.foreign
 
 import com.sun.jna.Pointer
 import io.ygdrasil.kffi.JnaArena

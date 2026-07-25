@@ -235,7 +235,7 @@ actual interface WGPUStringView : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUStringView {
         override var data: CString?
-            get() = (data_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let(::CString)
+            get() = (data_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let(::CString)
             set(value) = data_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var length: ULong
             get() = (length_VH.get(handler.handler, 0L) as Long).toULong() as ULong
@@ -342,7 +342,7 @@ actual interface WGPUChainedStruct : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUChainedStruct {
         override var next: WGPUChainedStruct?
-            get() = (next_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (next_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = next_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var sType: WGPUSType
             get() = (sType_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUSType
@@ -389,7 +389,7 @@ actual interface WGPUBufferMapCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUBufferMapCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -445,7 +445,7 @@ actual interface WGPUCompilationInfoCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUCompilationInfoCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -501,7 +501,7 @@ actual interface WGPUCreateComputePipelineAsyncCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUCreateComputePipelineAsyncCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -557,7 +557,7 @@ actual interface WGPUCreateRenderPipelineAsyncCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUCreateRenderPipelineAsyncCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -613,7 +613,7 @@ actual interface WGPUDeviceLostCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUDeviceLostCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -669,7 +669,7 @@ actual interface WGPUPopErrorScopeCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUPopErrorScopeCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -725,7 +725,7 @@ actual interface WGPUQueueWorkDoneCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUQueueWorkDoneCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -781,7 +781,7 @@ actual interface WGPURequestAdapterCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURequestAdapterCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -837,7 +837,7 @@ actual interface WGPURequestDeviceCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURequestDeviceCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mode: WGPUCallbackMode
             get() = (mode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUCallbackMode
@@ -889,7 +889,7 @@ actual interface WGPUUncapturedErrorCallbackInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUUncapturedErrorCallbackInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var callback: NativeAddress?
             get() = (callback_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
@@ -955,7 +955,7 @@ actual interface WGPUAdapterInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUAdapterInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var vendor: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("vendor")), Companion.layout.select(groupElement("vendor")).byteSize())))
@@ -1076,7 +1076,7 @@ actual interface WGPUBufferBindingLayout : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUBufferBindingLayout {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var type: WGPUBufferBindingType
             get() = (type_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUBufferBindingType
@@ -1128,7 +1128,7 @@ actual interface WGPUBufferDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUBufferDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -1224,7 +1224,7 @@ actual interface WGPUCommandBufferDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUCommandBufferDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -1262,7 +1262,7 @@ actual interface WGPUCommandEncoderDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUCommandEncoderDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -1372,7 +1372,7 @@ actual interface WGPUCompilationMessage : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUCompilationMessage {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var message: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("message")), Companion.layout.select(groupElement("message")).byteSize())))
@@ -1428,7 +1428,7 @@ actual interface WGPUConstantEntry : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUConstantEntry {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var key: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("key")), Companion.layout.select(groupElement("key")).byteSize())))
@@ -1517,7 +1517,7 @@ actual interface WGPUExternalTextureBindingEntry : CStructure {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("chain")), Companion.layout.select(groupElement("chain")).byteSize())
             }
         override var externalTexture: WGPUExternalTexture?
-            get() = (externalTexture_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUExternalTexture(it) }
+            get() = (externalTexture_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUExternalTexture(it) }
             set(value) = externalTexture_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -1614,7 +1614,7 @@ actual interface WGPUInstanceLimits : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUInstanceLimits {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var timedWaitAnyMaxCount: ULong
             get() = (timedWaitAnyMaxCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
@@ -1658,7 +1658,7 @@ actual interface WGPUMultisampleState : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUMultisampleState {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var count: UInt
             get() = (count_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
@@ -1750,10 +1750,10 @@ actual interface WGPUPassTimestampWrites : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUPassTimestampWrites {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var querySet: WGPUQuerySet?
-            get() = (querySet_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUQuerySet(it) }
+            get() = (querySet_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUQuerySet(it) }
             set(value) = querySet_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var beginningOfPassWriteIndex: UInt
             get() = (beginningOfPassWriteIndex_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
@@ -1802,7 +1802,7 @@ actual interface WGPUPipelineLayoutDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUPipelineLayoutDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -1863,7 +1863,7 @@ actual interface WGPUPrimitiveState : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUPrimitiveState {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var topology: WGPUPrimitiveTopology
             get() = (topology_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUPrimitiveTopology
@@ -1917,7 +1917,7 @@ actual interface WGPUQuerySetDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUQuerySetDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -1961,7 +1961,7 @@ actual interface WGPUQueueDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUQueueDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -1999,7 +1999,7 @@ actual interface WGPURenderBundleDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURenderBundleDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -2055,7 +2055,7 @@ actual interface WGPURenderBundleEncoderDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURenderBundleEncoderDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -2136,10 +2136,10 @@ actual interface WGPURenderPassDepthStencilAttachment : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURenderPassDepthStencilAttachment {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var view: WGPUTextureView?
-            get() = (view_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUTextureView(it) }
+            get() = (view_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUTextureView(it) }
             set(value) = view_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var depthLoadOp: WGPULoadOp
             get() = (depthLoadOp_VH.get(handler.handler, 0L) as Int).toUInt() as WGPULoadOp
@@ -2275,7 +2275,7 @@ actual interface WGPUSamplerBindingLayout : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUSamplerBindingLayout {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var type: WGPUSamplerBindingType
             get() = (type_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUSamplerBindingType
@@ -2342,7 +2342,7 @@ actual interface WGPUSamplerDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUSamplerDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -2551,7 +2551,7 @@ actual interface WGPUStorageTextureBindingLayout : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUStorageTextureBindingLayout {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var access: WGPUStorageTextureAccess
             get() = (access_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUStorageTextureAccess
@@ -2723,7 +2723,7 @@ actual interface WGPUSurfaceCapabilities : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUSurfaceCapabilities {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var usages: ULong
             get() = (usages_VH.get(handler.handler, 0L) as Long).toULong() as ULong
@@ -2847,10 +2847,10 @@ actual interface WGPUSurfaceConfiguration : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUSurfaceConfiguration {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var device: WGPUDevice?
-            get() = (device_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUDevice(it) }
+            get() = (device_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDevice(it) }
             set(value) = device_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var format: WGPUTextureFormat
             get() = (format_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUTextureFormat
@@ -3165,10 +3165,10 @@ actual interface WGPUSurfaceTexture : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUSurfaceTexture {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var texture: WGPUTexture?
-            get() = (texture_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUTexture(it) }
+            get() = (texture_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUTexture(it) }
             set(value) = texture_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var status: WGPUSurfaceGetCurrentTextureStatus
             get() = (status_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUSurfaceGetCurrentTextureStatus
@@ -3255,7 +3255,7 @@ actual interface WGPUTextureBindingLayout : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUTextureBindingLayout {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var sampleType: WGPUTextureSampleType
             get() = (sampleType_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUTextureSampleType
@@ -3394,7 +3394,7 @@ actual interface WGPUVertexAttribute : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUVertexAttribute {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var format: WGPUVertexFormat
             get() = (format_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUVertexFormat
@@ -3453,13 +3453,13 @@ actual interface WGPUBindGroupEntry : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUBindGroupEntry {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var binding: UInt
             get() = (binding_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = binding_VH.set(handler.handler, 0L, value.toInt())
         override var buffer: WGPUBuffer?
-            get() = (buffer_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUBuffer(it) }
+            get() = (buffer_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBuffer(it) }
             set(value) = buffer_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var offset: ULong
             get() = (offset_VH.get(handler.handler, 0L) as Long).toULong() as ULong
@@ -3468,10 +3468,10 @@ actual interface WGPUBindGroupEntry : CStructure {
             get() = (size_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = size_VH.set(handler.handler, 0L, value.toLong())
         override var sampler: WGPUSampler?
-            get() = (sampler_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUSampler(it) }
+            get() = (sampler_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUSampler(it) }
             set(value) = sampler_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var textureView: WGPUTextureView?
-            get() = (textureView_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUTextureView(it) }
+            get() = (textureView_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUTextureView(it) }
             set(value) = textureView_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -3521,7 +3521,7 @@ actual interface WGPUBindGroupLayoutEntry : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUBindGroupLayoutEntry {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var binding: UInt
             get() = (binding_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
@@ -3626,13 +3626,13 @@ actual interface WGPUCompilationInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUCompilationInfo {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var messageCount: ULong
             get() = (messageCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = messageCount_VH.set(handler.handler, 0L, value.toLong())
         override var messages: WGPUCompilationMessage?
-            get() = (messages_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUCompilationMessage(it) }
+            get() = (messages_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUCompilationMessage(it) }
             set(value) = messages_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -3668,7 +3668,7 @@ actual interface WGPUComputePassDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUComputePassDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -3676,7 +3676,7 @@ actual interface WGPUComputePassDescriptor : CStructure {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())
             }
         override var timestampWrites: WGPUPassTimestampWrites?
-            get() = (timestampWrites_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUPassTimestampWrites(it) }
+            get() = (timestampWrites_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUPassTimestampWrites(it) }
             set(value) = timestampWrites_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -3718,10 +3718,10 @@ actual interface WGPUComputeState : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUComputeState {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var module: WGPUShaderModule?
-            get() = (module_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
+            get() = (module_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
             set(value) = module_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var entryPoint: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("entryPoint")), Companion.layout.select(groupElement("entryPoint")).byteSize())))
@@ -3732,7 +3732,7 @@ actual interface WGPUComputeState : CStructure {
             get() = (constantCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = constantCount_VH.set(handler.handler, 0L, value.toLong())
         override var constants: WGPUConstantEntry?
-            get() = (constants_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUConstantEntry(it) }
+            get() = (constants_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUConstantEntry(it) }
             set(value) = constants_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -3791,7 +3791,7 @@ actual interface WGPUDepthStencilState : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUDepthStencilState {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var format: WGPUTextureFormat
             get() = (format_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUTextureFormat
@@ -3904,7 +3904,7 @@ actual interface WGPUInstanceDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUInstanceDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var requiredFeatureCount: ULong
             get() = (requiredFeatureCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
@@ -3913,7 +3913,7 @@ actual interface WGPUInstanceDescriptor : CStructure {
             get() = (requiredFeatures_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
             set(value) = requiredFeatures_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var requiredLimits: WGPUInstanceLimits?
-            get() = (requiredLimits_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUInstanceLimits(it) }
+            get() = (requiredLimits_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUInstanceLimits(it) }
             set(value) = requiredLimits_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -4041,7 +4041,7 @@ actual interface WGPULimits : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPULimits {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var maxTextureDimension1D: UInt
             get() = (maxTextureDimension1D_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
@@ -4186,16 +4186,16 @@ actual interface WGPURenderPassColorAttachment : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURenderPassColorAttachment {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var view: WGPUTextureView?
-            get() = (view_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUTextureView(it) }
+            get() = (view_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUTextureView(it) }
             set(value) = view_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var depthSlice: UInt
             get() = (depthSlice_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = depthSlice_VH.set(handler.handler, 0L, value.toInt())
         override var resolveTarget: WGPUTextureView?
-            get() = (resolveTarget_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUTextureView(it) }
+            get() = (resolveTarget_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUTextureView(it) }
             set(value) = resolveTarget_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var loadOp: WGPULoadOp
             get() = (loadOp_VH.get(handler.handler, 0L) as Int).toUInt() as WGPULoadOp
@@ -4252,7 +4252,7 @@ actual interface WGPURequestAdapterOptions : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURequestAdapterOptions {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var featureLevel: WGPUFeatureLevel
             get() = (featureLevel_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUFeatureLevel
@@ -4267,7 +4267,7 @@ actual interface WGPURequestAdapterOptions : CStructure {
             get() = (backendType_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUBackendType
             set(value) = backendType_VH.set(handler.handler, 0L, value.toInt())
         override var compatibleSurface: WGPUSurface?
-            get() = (compatibleSurface_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUSurface(it) }
+            get() = (compatibleSurface_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUSurface(it) }
             set(value) = compatibleSurface_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -4300,7 +4300,7 @@ actual interface WGPUShaderModuleDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUShaderModuleDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -4338,7 +4338,7 @@ actual interface WGPUSurfaceDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUSurfaceDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -4381,7 +4381,7 @@ actual interface WGPUTexelCopyBufferInfo : CStructure {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("layout")), Companion.layout.select(groupElement("layout")).byteSize())
             }
         override var buffer: WGPUBuffer?
-            get() = (buffer_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUBuffer(it) }
+            get() = (buffer_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBuffer(it) }
             set(value) = buffer_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -4421,7 +4421,7 @@ actual interface WGPUTexelCopyTextureInfo : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUTexelCopyTextureInfo {
         override var texture: WGPUTexture?
-            get() = (texture_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUTexture(it) }
+            get() = (texture_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUTexture(it) }
             set(value) = texture_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var mipLevel: UInt
             get() = (mipLevel_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
@@ -4528,7 +4528,7 @@ actual interface WGPUTextureDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUTextureDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -4603,7 +4603,7 @@ actual interface WGPUVertexBufferLayout : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUVertexBufferLayout {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var stepMode: WGPUVertexStepMode
             get() = (stepMode_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUVertexStepMode
@@ -4615,7 +4615,7 @@ actual interface WGPUVertexBufferLayout : CStructure {
             get() = (attributeCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = attributeCount_VH.set(handler.handler, 0L, value.toLong())
         override var attributes: WGPUVertexAttribute?
-            get() = (attributes_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUVertexAttribute(it) }
+            get() = (attributes_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUVertexAttribute(it) }
             set(value) = attributes_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -4657,7 +4657,7 @@ actual interface WGPUBindGroupDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUBindGroupDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -4665,13 +4665,13 @@ actual interface WGPUBindGroupDescriptor : CStructure {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())
             }
         override var layout: WGPUBindGroupLayout?
-            get() = (layout_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
+            get() = (layout_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBindGroupLayout(it) }
             set(value) = layout_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var entryCount: ULong
             get() = (entryCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = entryCount_VH.set(handler.handler, 0L, value.toLong())
         override var entries: WGPUBindGroupEntry?
-            get() = (entries_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUBindGroupEntry(it) }
+            get() = (entries_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBindGroupEntry(it) }
             set(value) = entries_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -4710,7 +4710,7 @@ actual interface WGPUBindGroupLayoutDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUBindGroupLayoutDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -4721,7 +4721,7 @@ actual interface WGPUBindGroupLayoutDescriptor : CStructure {
             get() = (entryCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = entryCount_VH.set(handler.handler, 0L, value.toLong())
         override var entries: WGPUBindGroupLayoutEntry?
-            get() = (entries_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUBindGroupLayoutEntry(it) }
+            get() = (entries_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBindGroupLayoutEntry(it) }
             set(value) = entries_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -4762,13 +4762,13 @@ actual interface WGPUColorTargetState : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUColorTargetState {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var format: WGPUTextureFormat
             get() = (format_VH.get(handler.handler, 0L) as Int).toUInt() as WGPUTextureFormat
             set(value) = format_VH.set(handler.handler, 0L, value.toInt())
         override var blend: WGPUBlendState?
-            get() = (blend_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUBlendState(it) }
+            get() = (blend_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUBlendState(it) }
             set(value) = blend_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var writeMask: ULong
             get() = (writeMask_VH.get(handler.handler, 0L) as Long).toULong() as ULong
@@ -4809,7 +4809,7 @@ actual interface WGPUComputePipelineDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUComputePipelineDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -4817,7 +4817,7 @@ actual interface WGPUComputePipelineDescriptor : CStructure {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())
             }
         override var layout: WGPUPipelineLayout?
-            get() = (layout_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUPipelineLayout(it) }
+            get() = (layout_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUPipelineLayout(it) }
             set(value) = layout_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var compute: WGPUComputeState
             get() = WGPUComputeState(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("compute")), Companion.layout.select(groupElement("compute")).byteSize())))
@@ -4870,7 +4870,7 @@ actual interface WGPUDeviceDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUDeviceDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -4884,7 +4884,7 @@ actual interface WGPUDeviceDescriptor : CStructure {
             get() = (requiredFeatures_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)
             set(value) = requiredFeatures_VH.set(handler.handler, 0L, value?.handler ?: MemorySegment.NULL)
         override var requiredLimits: WGPULimits?
-            get() = (requiredLimits_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPULimits(it) }
+            get() = (requiredLimits_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPULimits(it) }
             set(value) = requiredLimits_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var defaultQueue: WGPUQueueDescriptor
             get() = WGPUQueueDescriptor(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("defaultQueue")), Companion.layout.select(groupElement("defaultQueue")).byteSize())))
@@ -4947,7 +4947,7 @@ actual interface WGPURenderPassDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURenderPassDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -4958,16 +4958,16 @@ actual interface WGPURenderPassDescriptor : CStructure {
             get() = (colorAttachmentCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = colorAttachmentCount_VH.set(handler.handler, 0L, value.toLong())
         override var colorAttachments: WGPURenderPassColorAttachment?
-            get() = (colorAttachments_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPURenderPassColorAttachment(it) }
+            get() = (colorAttachments_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPURenderPassColorAttachment(it) }
             set(value) = colorAttachments_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var depthStencilAttachment: WGPURenderPassDepthStencilAttachment?
-            get() = (depthStencilAttachment_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPURenderPassDepthStencilAttachment(it) }
+            get() = (depthStencilAttachment_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPURenderPassDepthStencilAttachment(it) }
             set(value) = depthStencilAttachment_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var occlusionQuerySet: WGPUQuerySet?
-            get() = (occlusionQuerySet_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUQuerySet(it) }
+            get() = (occlusionQuerySet_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUQuerySet(it) }
             set(value) = occlusionQuerySet_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var timestampWrites: WGPUPassTimestampWrites?
-            get() = (timestampWrites_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUPassTimestampWrites(it) }
+            get() = (timestampWrites_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUPassTimestampWrites(it) }
             set(value) = timestampWrites_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -5025,7 +5025,7 @@ actual interface WGPUTextureViewDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUTextureViewDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -5102,10 +5102,10 @@ actual interface WGPUVertexState : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUVertexState {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var module: WGPUShaderModule?
-            get() = (module_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
+            get() = (module_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
             set(value) = module_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var entryPoint: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("entryPoint")), Companion.layout.select(groupElement("entryPoint")).byteSize())))
@@ -5116,13 +5116,13 @@ actual interface WGPUVertexState : CStructure {
             get() = (constantCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = constantCount_VH.set(handler.handler, 0L, value.toLong())
         override var constants: WGPUConstantEntry?
-            get() = (constants_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUConstantEntry(it) }
+            get() = (constants_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUConstantEntry(it) }
             set(value) = constants_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var bufferCount: ULong
             get() = (bufferCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = bufferCount_VH.set(handler.handler, 0L, value.toLong())
         override var buffers: WGPUVertexBufferLayout?
-            get() = (buffers_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUVertexBufferLayout(it) }
+            get() = (buffers_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUVertexBufferLayout(it) }
             set(value) = buffers_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -5170,10 +5170,10 @@ actual interface WGPUFragmentState : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUFragmentState {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var module: WGPUShaderModule?
-            get() = (module_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
+            get() = (module_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUShaderModule(it) }
             set(value) = module_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var entryPoint: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("entryPoint")), Companion.layout.select(groupElement("entryPoint")).byteSize())))
@@ -5184,13 +5184,13 @@ actual interface WGPUFragmentState : CStructure {
             get() = (constantCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = constantCount_VH.set(handler.handler, 0L, value.toLong())
         override var constants: WGPUConstantEntry?
-            get() = (constants_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUConstantEntry(it) }
+            get() = (constants_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUConstantEntry(it) }
             set(value) = constants_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var targetCount: ULong
             get() = (targetCount_VH.get(handler.handler, 0L) as Long).toULong() as ULong
             set(value) = targetCount_VH.set(handler.handler, 0L, value.toLong())
         override var targets: WGPUColorTargetState?
-            get() = (targets_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUColorTargetState(it) }
+            get() = (targets_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUColorTargetState(it) }
             set(value) = targets_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -5238,7 +5238,7 @@ actual interface WGPURenderPipelineDescriptor : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPURenderPipelineDescriptor {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var label: WGPUStringView
             get() = WGPUStringView(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())))
@@ -5246,7 +5246,7 @@ actual interface WGPURenderPipelineDescriptor : CStructure {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("label")), Companion.layout.select(groupElement("label")).byteSize())
             }
         override var layout: WGPUPipelineLayout?
-            get() = (layout_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUPipelineLayout(it) }
+            get() = (layout_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUPipelineLayout(it) }
             set(value) = layout_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var vertex: WGPUVertexState
             get() = WGPUVertexState(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("vertex")), Companion.layout.select(groupElement("vertex")).byteSize())))
@@ -5259,7 +5259,7 @@ actual interface WGPURenderPipelineDescriptor : CStructure {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("primitive")), Companion.layout.select(groupElement("primitive")).byteSize())
             }
         override var depthStencil: WGPUDepthStencilState?
-            get() = (depthStencil_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUDepthStencilState(it) }
+            get() = (depthStencil_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUDepthStencilState(it) }
             set(value) = depthStencil_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var multisample: WGPUMultisampleState
             get() = WGPUMultisampleState(NativeAddress(handler.handler.asSlice(Companion.layout.byteOffset(groupElement("multisample")), Companion.layout.select(groupElement("multisample")).byteSize())))
@@ -5267,7 +5267,7 @@ actual interface WGPURenderPipelineDescriptor : CStructure {
                 MemorySegment.copy(value.handler.handler, 0L, handler.handler, Companion.layout.byteOffset(groupElement("multisample")), Companion.layout.select(groupElement("multisample")).byteSize())
             }
         override var fragment: WGPUFragmentState?
-            get() = (fragment_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUFragmentState(it) }
+            get() = (fragment_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUFragmentState(it) }
             set(value) = fragment_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -7279,7 +7279,7 @@ actual interface WGPUShaderSourceGLSL : CStructure {
             get() = (defineCount_VH.get(handler.handler, 0L) as Int).toUInt() as UInt
             set(value) = defineCount_VH.set(handler.handler, 0L, value.toInt())
         override var defines: WGPUShaderDefine?
-            get() = (defines_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUShaderDefine(it) }
+            get() = (defines_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUShaderDefine(it) }
             set(value) = defines_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
     }
 }
@@ -7590,7 +7590,7 @@ actual interface WGPUInstanceEnumerateAdapterOptions : CStructure {
     @JvmInline
     value class ByReference(override val handler: NativeAddress) : WGPUInstanceEnumerateAdapterOptions {
         override var nextInChain: WGPUChainedStruct?
-            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
+            get() = (nextInChain_VH.get(handler.handler, 0L) as? MemorySegment)?.takeIf { it != MemorySegment.NULL }?.let(::NativeAddress)?.let { WGPUChainedStruct(it) }
             set(value) = nextInChain_VH.set(handler.handler, 0L, value?.handler?.handler ?: MemorySegment.NULL)
         override var backends: ULong
             get() = (backends_VH.get(handler.handler, 0L) as Long).toULong() as ULong
