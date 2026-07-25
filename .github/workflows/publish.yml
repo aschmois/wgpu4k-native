@@ -23,12 +23,21 @@ jobs:
             echo "::error title=Invalid release VERSION::VERSION must be non-empty and must not end with -SNAPSHOT."
             exit 1
           fi
+          for required in mavenCentralUsername mavenCentralPassword signingInMemoryKey signingInMemoryKeyPassword; do
+            var="ORG_GRADLE_PROJECT_$required"
+            if [[ -z "${!var}" ]]; then
+              echo "::error title=Missing credential::$var is empty; check the repository Actions secrets."
+              exit 1
+            fi
+          done
           ./gradlew fetch-native-dependencies assemble build publishToMavenCentral \
             -x :kextract:test \
             --info
         env:
           VERSION: ${{ github.event.release.tag_name }}
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_LOGIN }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.PGP_PRIVATE }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.PGP_PASSPHRASE }}
+          # This fork's Actions secrets predate upstream's SONATYPE_*/PGP_* naming, so map the
+          # names that actually exist here onto the Gradle properties the publish plugin reads.
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USER }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_PASSPHRASE }}
