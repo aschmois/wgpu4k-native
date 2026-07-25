@@ -390,24 +390,32 @@ tasks.register<Exec>("generateBindingsFromHeader") {
         // types clang would still emit. The resource-include dir is host-specific (e.g. Kotlin/
         // Native's bundled LLVM: ~/.konan/dependencies/llvm-*/lib/clang/<v>/include), so it is
         // supplied via -Pwgpu4k.clangResourceDir=... or the WGPU4K_CLANG_RESOURCE_DIR env var.
+        // A missing resource dir must not fail task CREATION. Gradle realizes this task whenever
+        // it builds a task graph that reaches it (`build` -> `allTests`), so erroring here takes
+        // the whole Linux build down even when nothing regenerates bindings. Only an actual run
+        // of this task needs the dir, so the check belongs in the execution phase.
         val clangResourceInclude =
             providers.gradleProperty("wgpu4k.clangResourceDir")
                 .orElse(providers.environmentVariable("WGPU4K_CLANG_RESOURCE_DIR"))
                 .orNull
-                ?: error(
-                    "Linux binding generation needs clang's resource include dir; set " +
-                        "-Pwgpu4k.clangResourceDir=<llvm>/lib/clang/<version>/include " +
-                        "(or the WGPU4K_CLANG_RESOURCE_DIR env var).",
-                )
-        clangArgs.addAll(
-            listOf(
-                "-D", "__MATH_H__",
-                "-D", "__CLANG_MAX_ALIGN_T_DEFINED",
-                "-A", "-ffreestanding",
-                "-A", "-nostdinc",
-                "-A", "-isystem", "-A", clangResourceInclude,
-            ),
-        )
+        doFirst {
+            checkNotNull(clangResourceInclude) {
+                "Linux binding generation needs clang's resource include dir; set " +
+                    "-Pwgpu4k.clangResourceDir=<llvm>/lib/clang/<version>/include " +
+                    "(or the WGPU4K_CLANG_RESOURCE_DIR env var)."
+            }
+        }
+        if (clangResourceInclude != null) {
+            clangArgs.addAll(
+                listOf(
+                    "-D", "__MATH_H__",
+                    "-D", "__CLANG_MAX_ALIGN_T_DEFINED",
+                    "-A", "-ffreestanding",
+                    "-A", "-nostdinc",
+                    "-A", "-isystem", "-A", clangResourceInclude,
+                ),
+            )
+        }
     }
 
     args = listOf(
