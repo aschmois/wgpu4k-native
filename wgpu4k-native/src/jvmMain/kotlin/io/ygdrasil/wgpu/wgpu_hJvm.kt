@@ -57,45 +57,45 @@ private object KextractNativeBootstrap {
 
     private val bundles: kotlin.collections.Map<kotlin.String, Bundle> = kotlin.collections.mapOf(
         "darwin-aarch64" to Bundle(
-            key = "942bb3749d5028a006bd509074ab5e583a7ef1e3d2b1801ebb756e6e6631e6db",
+            key = "3d375bb3335218a005ec01b06b107825cff25f432e5b4cf3ee10bc2cb6a7467a",
             resources = kotlin.collections.listOf(
-                Resource("libwgpu_native.dylib", "db82d285ec0317cb44d23981c1a42c038fcafd9b0b56c8a1e502e28fb0bf9f71"),
+                Resource("libwgpu_native.dylib", "e72e8f1777dd0315bfee91c6b7e7b105234d5c1cc1621db4cf92ffee2ac2ae32"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "libwgpu_native.dylib",
             ),
         ),
         "darwin-x86-64" to Bundle(
-            key = "2f59d2604f9e22a065d68db862e61e92c1a7a8467a53c101f86f39f9f1ad5baa",
+            key = "146939519caab2e7492b64e78a96b189835852f4f776424025c1afdc35788f5f",
             resources = kotlin.collections.listOf(
-                Resource("libwgpu_native.dylib", "a324d2406c3aaf0ad67bc962d796a911ae770b17aa4c07540795e86f41d6a9a5"),
+                Resource("libwgpu_native.dylib", "d5175b3c0675e7f66b677a7c28537ff260a698c82fff96179247cd9c9dec6c8d"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "libwgpu_native.dylib",
             ),
         ),
         "linux-aarch64" to Bundle(
-            key = "a1d761e1f99942359c3d74c6622324b91a95ee2994e4b3037d19c0e201131d25",
+            key = "e9b3785130015d2107104ec3e8b72ebc20912e595726c95dc6e58a2cceea22ac",
             resources = kotlin.collections.listOf(
-                Resource("libwgpu_native.so", "fd70bee7ab7fc422cae358d984abece2364206f6bd6868a7486597a92098386d"),
+                Resource("libwgpu_native.so", "51d8a711c9a687f824712c42a206800b69f14eff8667a88f2f86936cdef0ebd0"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "libwgpu_native.so",
             ),
         ),
         "linux-x86-64" to Bundle(
-            key = "129bd63a2be26785822a07bbc1686b46148ce852c4dc1dafb1666dc4225c0542",
+            key = "7260f9fbfb52bc0fd0926ec1ffa3db52786122868d54dfc262752ccf76a09f08",
             resources = kotlin.collections.listOf(
-                Resource("libwgpu_native.so", "9637b9dca87f44e7df5fae922c8173a4c9456d508caaebc0b8e2c7fe327918e8"),
+                Resource("libwgpu_native.so", "be0d8270dd9d78e1039eeb413ee21be8a89776a752e56d6b0f57eefbbc2d749c"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "libwgpu_native.so",
             ),
         ),
         "win32-x86-64" to Bundle(
-            key = "8c58caea2c5f9d3855b3c39ae20e2d7d435cef67845979c53a67ef81deb4e27c",
+            key = "94b8466520009dae327f49f0709c1e1acceaf855d4922e4a888fca938241ab11",
             resources = kotlin.collections.listOf(
-                Resource("wgpu_native.dll", "681c1f28050eebe67e31fc40be1361abfebf4429c181c150f0f4a5044c144fc9"),
+                Resource("wgpu_native.dll", "5e26249c40dcdac43f5adca3195fcf40e4ec6c67472b38510165f411fcc198e7"),
             ),
             libraryPaths = kotlin.collections.mapOf(
                 "wgpu_native" to "wgpu_native.dll",
@@ -6737,6 +6737,12 @@ actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePas
     return
 }
 
+private val wgpuComputePassEncoderSetImmediates_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetImmediates") }
+actual fun wgpuComputePassEncoderSetImmediates(computePassEncoder: WGPUComputePassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    JvmDowncallEngine.callGeneric(wgpuComputePassEncoderSetImmediates_ADDR, JvmDowncallEngine.FunctionShape(result = JvmDowncallEngine.AbiType.Void, arguments = listOf(JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.I32, JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.I64)), computePassEncoder?.handler?.rawValue ?: 0L, offset.toInt(), data?.rawValue ?: 0L, size.toLong())
+    return
+}
+
 private val wgpuComputePassEncoderSetLabel_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetLabel") }
 actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit {
     JvmDowncallEngine.callStructArgWGPUStringView(wgpuComputePassEncoderSetLabel_ADDR, computePassEncoder?.handler?.rawValue ?: 0L, label.handler.rawValue)
@@ -7146,6 +7152,12 @@ actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBu
     return
 }
 
+private val wgpuRenderBundleEncoderSetImmediates_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetImmediates") }
+actual fun wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder: WGPURenderBundleEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    JvmDowncallEngine.callGeneric(wgpuRenderBundleEncoderSetImmediates_ADDR, JvmDowncallEngine.FunctionShape(result = JvmDowncallEngine.AbiType.Void, arguments = listOf(JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.I32, JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.I64)), renderBundleEncoder?.handler?.rawValue ?: 0L, offset.toInt(), data?.rawValue ?: 0L, size.toLong())
+    return
+}
+
 private val wgpuRenderBundleEncoderSetIndexBuffer_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetIndexBuffer") }
 actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
     JvmDowncallEngine.callV5PPILL(wgpuRenderBundleEncoderSetIndexBuffer_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, format.toInt(), offset.toLong(), size.toLong())
@@ -7257,6 +7269,12 @@ actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEn
 private val wgpuRenderPassEncoderSetBlendConstant_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetBlendConstant") }
 actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
     JvmDowncallEngine.callV2PP(wgpuRenderPassEncoderSetBlendConstant_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, color?.handler?.rawValue ?: 0L)
+    return
+}
+
+private val wgpuRenderPassEncoderSetImmediates_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetImmediates") }
+actual fun wgpuRenderPassEncoderSetImmediates(renderPassEncoder: WGPURenderPassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    JvmDowncallEngine.callGeneric(wgpuRenderPassEncoderSetImmediates_ADDR, JvmDowncallEngine.FunctionShape(result = JvmDowncallEngine.AbiType.Void, arguments = listOf(JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.I32, JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.I64)), renderPassEncoder?.handler?.rawValue ?: 0L, offset.toInt(), data?.rawValue ?: 0L, size.toLong())
     return
 }
 
@@ -7944,9 +7962,10 @@ actual interface WGPUDeviceExtras {
 
 actual interface WGPUNativeLimits {
     actual var chain: WGPUChainedStruct
-    actual var maxImmediateSize: UInt
     actual var maxNonSamplerBindings: UInt
     actual var maxBindingArrayElementsPerShaderStage: UInt
+    actual var maxBindingArraySamplerElementsPerShaderStage: UInt
+    actual var maxMultiviewViewCount: UInt
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUNativeLimits = ByReference(address)
@@ -7970,15 +7989,18 @@ actual interface WGPUNativeLimits {
                 MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
                 mem.writeBytes(bytes, 0u, 0uL, 16uL)
             }
-        override var maxImmediateSize: UInt
+        override var maxNonSamplerBindings: UInt
             get() = mem.readUInt(16uL)
             set(value) { mem.writeUInt(value, 16uL) }
-        override var maxNonSamplerBindings: UInt
+        override var maxBindingArrayElementsPerShaderStage: UInt
             get() = mem.readUInt(20uL)
             set(value) { mem.writeUInt(value, 20uL) }
-        override var maxBindingArrayElementsPerShaderStage: UInt
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
             get() = mem.readUInt(24uL)
             set(value) { mem.writeUInt(value, 24uL) }
+        override var maxMultiviewViewCount: UInt
+            get() = mem.readUInt(28uL)
+            set(value) { mem.writeUInt(value, 28uL) }
         override val handler: NativeAddress
             get() = handle
     }
@@ -7992,65 +8014,18 @@ actual interface WGPUNativeLimits {
                 MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
                 mem.writeBytes(bytes, 0u, 0uL, 16uL)
             }
-        override var maxImmediateSize: UInt
+        override var maxNonSamplerBindings: UInt
             get() = mem.readUInt(16uL)
             set(value) { mem.writeUInt(value, 16uL) }
-        override var maxNonSamplerBindings: UInt
+        override var maxBindingArrayElementsPerShaderStage: UInt
             get() = mem.readUInt(20uL)
             set(value) { mem.writeUInt(value, 20uL) }
-        override var maxBindingArrayElementsPerShaderStage: UInt
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
             get() = mem.readUInt(24uL)
             set(value) { mem.writeUInt(value, 24uL) }
-        override val handler: NativeAddress
-            get() = handle
-    }
-}
-
-actual interface WGPUPipelineLayoutExtras {
-    actual var chain: WGPUChainedStruct
-    actual var immediateDataSize: UInt
-    actual val handler: NativeAddress
-    actual companion object {
-        actual operator fun invoke(address: NativeAddress): WGPUPipelineLayoutExtras = ByReference(address)
-        actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutExtras = ByReference(allocator.allocateBuffer(24uL).handler)
-        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPipelineLayoutExtras) -> Unit): ArrayHolder<WGPUPipelineLayoutExtras> {
-            val buffer = allocator.allocateBuffer(24uL * size)
-            val result = ArrayHolder<WGPUPipelineLayoutExtras>(buffer.handler)
-            repeat(size.toInt()) { index ->
-                provider(index.toUInt(), ByValue(NativeAddress(buffer.handler.rawValue + index.toLong() * 24L)))
-            }
-            return result
-        }
-    }
-    
-    class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutExtras {
-        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
-        override var chain: WGPUChainedStruct
-            get() = WGPUChainedStruct.ByValue(NativeAddress(handle.rawValue + 0L))
-            set(value) {
-                val bytes = ByteArray(16)
-                MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
-                mem.writeBytes(bytes, 0u, 0uL, 16uL)
-            }
-        override var immediateDataSize: UInt
-            get() = mem.readUInt(16uL)
-            set(value) { mem.writeUInt(value, 16uL) }
-        override val handler: NativeAddress
-            get() = handle
-    }
-    
-    class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutExtras {
-        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
-        override var chain: WGPUChainedStruct
-            get() = WGPUChainedStruct.ByValue(NativeAddress(handle.rawValue + 0L))
-            set(value) {
-                val bytes = ByteArray(16)
-                MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
-                mem.writeBytes(bytes, 0u, 0uL, 16uL)
-            }
-        override var immediateDataSize: UInt
-            get() = mem.readUInt(16uL)
-            set(value) { mem.writeUInt(value, 16uL) }
+        override var maxMultiviewViewCount: UInt
+            get() = mem.readUInt(28uL)
+            set(value) { mem.writeUInt(value, 28uL) }
         override val handler: NativeAddress
             get() = handle
     }
@@ -9038,6 +9013,119 @@ actual interface WGPUPrimitiveStateExtras {
     }
 }
 
+actual interface WGPUImageSubresourceRange {
+    actual var aspect: WGPUTextureAspect
+    actual var baseMipLevel: UInt
+    actual var mipLevelCount: UInt
+    actual var baseArrayLayer: UInt
+    actual var arrayLayerCount: UInt
+    actual val handler: NativeAddress
+    actual companion object {
+        actual operator fun invoke(address: NativeAddress): WGPUImageSubresourceRange = ByReference(address)
+        actual fun allocate(allocator: MemoryAllocator): WGPUImageSubresourceRange = ByReference(allocator.allocateBuffer(20uL).handler)
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageSubresourceRange) -> Unit): ArrayHolder<WGPUImageSubresourceRange> {
+            val buffer = allocator.allocateBuffer(20uL * size)
+            val result = ArrayHolder<WGPUImageSubresourceRange>(buffer.handler)
+            repeat(size.toInt()) { index ->
+                provider(index.toUInt(), ByValue(NativeAddress(buffer.handler.rawValue + index.toLong() * 20L)))
+            }
+            return result
+        }
+    }
+    
+    class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUImageSubresourceRange {
+        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 20uL) }
+        override var aspect: WGPUTextureAspect
+            get() = mem.readUInt(0uL) as WGPUTextureAspect
+            set(value) { mem.writeUInt(value.toUInt(), 0uL) }
+        override var baseMipLevel: UInt
+            get() = mem.readUInt(4uL)
+            set(value) { mem.writeUInt(value, 4uL) }
+        override var mipLevelCount: UInt
+            get() = mem.readUInt(8uL)
+            set(value) { mem.writeUInt(value, 8uL) }
+        override var baseArrayLayer: UInt
+            get() = mem.readUInt(12uL)
+            set(value) { mem.writeUInt(value, 12uL) }
+        override var arrayLayerCount: UInt
+            get() = mem.readUInt(16uL)
+            set(value) { mem.writeUInt(value, 16uL) }
+        override val handler: NativeAddress
+            get() = handle
+    }
+    
+    class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUImageSubresourceRange {
+        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 20uL) }
+        override var aspect: WGPUTextureAspect
+            get() = mem.readUInt(0uL) as WGPUTextureAspect
+            set(value) { mem.writeUInt(value.toUInt(), 0uL) }
+        override var baseMipLevel: UInt
+            get() = mem.readUInt(4uL)
+            set(value) { mem.writeUInt(value, 4uL) }
+        override var mipLevelCount: UInt
+            get() = mem.readUInt(8uL)
+            set(value) { mem.writeUInt(value, 8uL) }
+        override var baseArrayLayer: UInt
+            get() = mem.readUInt(12uL)
+            set(value) { mem.writeUInt(value, 12uL) }
+        override var arrayLayerCount: UInt
+            get() = mem.readUInt(16uL)
+            set(value) { mem.writeUInt(value, 16uL) }
+        override val handler: NativeAddress
+            get() = handle
+    }
+}
+
+actual interface WGPUSamplerDescriptorExtras {
+    actual var chain: WGPUChainedStruct
+    actual var samplerBorderColor: WGPUSamplerBorderColor
+    actual val handler: NativeAddress
+    actual companion object {
+        actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptorExtras = ByReference(address)
+        actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptorExtras = ByReference(allocator.allocateBuffer(24uL).handler)
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerDescriptorExtras) -> Unit): ArrayHolder<WGPUSamplerDescriptorExtras> {
+            val buffer = allocator.allocateBuffer(24uL * size)
+            val result = ArrayHolder<WGPUSamplerDescriptorExtras>(buffer.handler)
+            repeat(size.toInt()) { index ->
+                provider(index.toUInt(), ByValue(NativeAddress(buffer.handler.rawValue + index.toLong() * 24L)))
+            }
+            return result
+        }
+    }
+    
+    class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerDescriptorExtras {
+        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
+        override var chain: WGPUChainedStruct
+            get() = WGPUChainedStruct.ByValue(NativeAddress(handle.rawValue + 0L))
+            set(value) {
+                val bytes = ByteArray(16)
+                MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
+                mem.writeBytes(bytes, 0u, 0uL, 16uL)
+            }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = mem.readUInt(16uL) as WGPUSamplerBorderColor
+            set(value) { mem.writeUInt(value.toUInt(), 16uL) }
+        override val handler: NativeAddress
+            get() = handle
+    }
+    
+    class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerDescriptorExtras {
+        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
+        override var chain: WGPUChainedStruct
+            get() = WGPUChainedStruct.ByValue(NativeAddress(handle.rawValue + 0L))
+            set(value) {
+                val bytes = ByteArray(16)
+                MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
+                mem.writeBytes(bytes, 0u, 0uL, 16uL)
+            }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = mem.readUInt(16uL) as WGPUSamplerBorderColor
+            set(value) { mem.writeUInt(value.toUInt(), 16uL) }
+        override val handler: NativeAddress
+            get() = handle
+    }
+}
+
 private val wgpuGenerateReport_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuGenerateReport") }
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
     JvmDowncallEngine.callV2PP(wgpuGenerateReport_ADDR, instance?.handler?.rawValue ?: 0L, report?.handler?.rawValue ?: 0L)
@@ -9099,24 +9187,6 @@ actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress
 private val wgpuTextureGetNativeMetalTexture_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuTextureGetNativeMetalTexture") }
 actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
     return JvmDowncallEngine.callP1P(wgpuTextureGetNativeMetalTexture_ADDR, texture?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)
-}
-
-private val wgpuRenderPassEncoderSetImmediates_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderSetImmediates") }
-actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    JvmDowncallEngine.callV4PIIP(wgpuRenderPassEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data?.rawValue ?: 0L)
-    return
-}
-
-private val wgpuComputePassEncoderSetImmediates_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuComputePassEncoderSetImmediates") }
-actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    JvmDowncallEngine.callV4PIIP(wgpuComputePassEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data?.rawValue ?: 0L)
-    return
-}
-
-private val wgpuRenderBundleEncoderSetImmediates_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuRenderBundleEncoderSetImmediates") }
-actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    JvmDowncallEngine.callV4PIIP(wgpuRenderBundleEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data?.rawValue ?: 0L)
-    return
 }
 
 private val wgpuRenderPassEncoderMultiDrawIndirect_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndirect") }
@@ -9188,6 +9258,18 @@ private val wgpuDeviceStopGraphicsDebuggerCapture_ADDR: Long by lazy { KextractN
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     JvmDowncallEngine.callV1P(wgpuDeviceStopGraphicsDebuggerCapture_ADDR, device?.handler?.rawValue ?: 0L)
     return
+}
+
+private val wgpuCommandEncoderClearTexture_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuCommandEncoderClearTexture") }
+actual fun wgpuCommandEncoderClearTexture(commandEncoder: WGPUCommandEncoder?, texture: WGPUTexture?, range: WGPUImageSubresourceRange?): Unit {
+    JvmDowncallEngine.callGeneric(wgpuCommandEncoderClearTexture_ADDR, JvmDowncallEngine.FunctionShape(result = JvmDowncallEngine.AbiType.Void, arguments = listOf(JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.Pointer)), commandEncoder?.handler?.rawValue ?: 0L, texture?.handler?.rawValue ?: 0L, range?.handler?.rawValue ?: 0L)
+    return
+}
+
+private val wgpuDeviceCreateShaderModuleTrusted_ADDR: Long by lazy { KextractNativeBootstrap.resolve("wgpuDeviceCreateShaderModuleTrusted") }
+actual fun wgpuDeviceCreateShaderModuleTrusted(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?, runtimeChecks: ULong): WGPUShaderModule? {
+    val _kffiGenericResult = JvmDowncallEngine.callGeneric(wgpuDeviceCreateShaderModuleTrusted_ADDR, JvmDowncallEngine.FunctionShape(result = JvmDowncallEngine.AbiType.Pointer, arguments = listOf(JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.Pointer, JvmDowncallEngine.AbiType.I64)), device?.handler?.rawValue ?: 0L, descriptor?.handler?.rawValue ?: 0L, runtimeChecks.toLong())
+    return (_kffiGenericResult as MemorySegment).address().takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUShaderModule)
 }
 
 @OptIn(CallbackRuntimeApi::class)
@@ -11345,10 +11427,10 @@ private fun __kffiJvmRegisterStructLayout96() {
 }
 private fun __kffiJvmStructFields97_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("maxImmediateSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
-    JvmDowncallEngine.StructField("maxNonSamplerBindings", JvmDowncallEngine.FieldKind.UINT32, 20L),
-    JvmDowncallEngine.StructField("maxBindingArrayElementsPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 24L),
-    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("maxNonSamplerBindings", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("maxBindingArrayElementsPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 20L),
+    JvmDowncallEngine.StructField("maxBindingArraySamplerElementsPerShaderStage", JvmDowncallEngine.FieldKind.UINT32, 24L),
+    JvmDowncallEngine.StructField("maxMultiviewViewCount", JvmDowncallEngine.FieldKind.UINT32, 28L),
 )
 private fun __kffiJvmRegisterStructLayout97() {
     JvmDowncallEngine.registerStructLayout(
@@ -11358,29 +11440,17 @@ private fun __kffiJvmRegisterStructLayout97() {
     )
 }
 private fun __kffiJvmStructFields98_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
-    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("immediateDataSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
-    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
 )
 private fun __kffiJvmRegisterStructLayout98() {
     JvmDowncallEngine.registerStructLayout(
-        "WGPUPipelineLayoutExtras",
-        24L, 8L,
+        "WGPUShaderDefine",
+        32L, 8L,
         __kffiJvmStructFields98_0(),
     )
 }
 private fun __kffiJvmStructFields99_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
-    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 16L),
-)
-private fun __kffiJvmRegisterStructLayout99() {
-    JvmDowncallEngine.registerStructLayout(
-        "WGPUShaderDefine",
-        32L, 8L,
-        __kffiJvmStructFields99_0(),
-    )
-}
-private fun __kffiJvmStructFields100_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
     JvmDowncallEngine.StructField("stage", JvmDowncallEngine.FieldKind.UINT64, 16L),
     JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 24L),
@@ -11388,40 +11458,40 @@ private fun __kffiJvmStructFields100_0(): kotlin.collections.List<JvmDowncallEng
     JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
     JvmDowncallEngine.StructField("defines", JvmDowncallEngine.FieldKind.POINTER, 48L),
 )
-private fun __kffiJvmRegisterStructLayout100() {
+private fun __kffiJvmRegisterStructLayout99() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUShaderSourceGLSL",
         56L, 8L,
-        __kffiJvmStructFields100_0(),
+        __kffiJvmStructFields99_0(),
     )
 }
-private fun __kffiJvmStructFields101_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+private fun __kffiJvmStructFields100_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPUStringView", JvmDowncallEngine.FieldKind.STRUCT, 0L),
     JvmDowncallEngine.StructField("sourceSize", JvmDowncallEngine.FieldKind.UINT32, 16L),
     JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
     JvmDowncallEngine.StructField("source", JvmDowncallEngine.FieldKind.POINTER, 24L),
 )
-private fun __kffiJvmRegisterStructLayout101() {
+private fun __kffiJvmRegisterStructLayout100() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUShaderModuleDescriptorSpirV",
         32L, 8L,
-        __kffiJvmStructFields101_0(),
+        __kffiJvmStructFields100_0(),
     )
 }
-private fun __kffiJvmStructFields102_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+private fun __kffiJvmStructFields101_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("numAllocated", JvmDowncallEngine.FieldKind.UINT64, 0L),
     JvmDowncallEngine.StructField("numKeptFromUser", JvmDowncallEngine.FieldKind.UINT64, 8L),
     JvmDowncallEngine.StructField("numReleasedFromUser", JvmDowncallEngine.FieldKind.UINT64, 16L),
     JvmDowncallEngine.StructField("elementSize", JvmDowncallEngine.FieldKind.UINT64, 24L),
 )
-private fun __kffiJvmRegisterStructLayout102() {
+private fun __kffiJvmRegisterStructLayout101() {
     JvmDowncallEngine.registerStructLayout(
         "WGPURegistryReport",
         32L, 8L,
-        __kffiJvmStructFields102_0(),
+        __kffiJvmStructFields101_0(),
     )
 }
-private fun __kffiJvmStructFields103_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+private fun __kffiJvmStructFields102_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 0L),
     JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 32L),
     JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 64L),
@@ -11440,36 +11510,36 @@ private fun __kffiJvmStructFields103_0(): kotlin.collections.List<JvmDowncallEng
     JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 480L),
     JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 512L),
 )
-private fun __kffiJvmRegisterStructLayout103() {
+private fun __kffiJvmRegisterStructLayout102() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUHubReport",
         544L, 8L,
+        __kffiJvmStructFields102_0(),
+    )
+}
+private fun __kffiJvmStructFields103_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("WGPUHubReport", JvmDowncallEngine.FieldKind.STRUCT, 32L),
+)
+private fun __kffiJvmRegisterStructLayout103() {
+    JvmDowncallEngine.registerStructLayout(
+        "WGPUGlobalReport",
+        576L, 8L,
         __kffiJvmStructFields103_0(),
     )
 }
 private fun __kffiJvmStructFields104_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
-    JvmDowncallEngine.StructField("WGPURegistryReport", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("WGPUHubReport", JvmDowncallEngine.FieldKind.STRUCT, 32L),
+    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
+    JvmDowncallEngine.StructField("backends", JvmDowncallEngine.FieldKind.UINT64, 8L),
 )
 private fun __kffiJvmRegisterStructLayout104() {
     JvmDowncallEngine.registerStructLayout(
-        "WGPUGlobalReport",
-        576L, 8L,
+        "WGPUInstanceEnumerateAdapterOptions",
+        16L, 8L,
         __kffiJvmStructFields104_0(),
     )
 }
 private fun __kffiJvmStructFields105_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
-    JvmDowncallEngine.StructField("nextInChain", JvmDowncallEngine.FieldKind.POINTER, 0L),
-    JvmDowncallEngine.StructField("backends", JvmDowncallEngine.FieldKind.UINT64, 8L),
-)
-private fun __kffiJvmRegisterStructLayout105() {
-    JvmDowncallEngine.registerStructLayout(
-        "WGPUInstanceEnumerateAdapterOptions",
-        16L, 8L,
-        __kffiJvmStructFields105_0(),
-    )
-}
-private fun __kffiJvmStructFields106_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
     JvmDowncallEngine.StructField("buffers", JvmDowncallEngine.FieldKind.POINTER, 16L),
     JvmDowncallEngine.StructField("bufferCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
@@ -11478,70 +11548,96 @@ private fun __kffiJvmStructFields106_0(): kotlin.collections.List<JvmDowncallEng
     JvmDowncallEngine.StructField("textureViews", JvmDowncallEngine.FieldKind.POINTER, 48L),
     JvmDowncallEngine.StructField("textureViewCount", JvmDowncallEngine.FieldKind.UINT64, 56L),
 )
-private fun __kffiJvmRegisterStructLayout106() {
+private fun __kffiJvmRegisterStructLayout105() {
     JvmDowncallEngine.registerStructLayout(
         "WGPUBindGroupEntryExtras",
         64L, 8L,
+        __kffiJvmStructFields105_0(),
+    )
+}
+private fun __kffiJvmStructFields106_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("count", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout106() {
+    JvmDowncallEngine.registerStructLayout(
+        "WGPUBindGroupLayoutEntryExtras",
+        24L, 8L,
         __kffiJvmStructFields106_0(),
     )
 }
 private fun __kffiJvmStructFields107_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("count", JvmDowncallEngine.FieldKind.UINT32, 16L),
-    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("pipelineStatistics", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("pipelineStatisticCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
 )
 private fun __kffiJvmRegisterStructLayout107() {
     JvmDowncallEngine.registerStructLayout(
-        "WGPUBindGroupLayoutEntryExtras",
-        24L, 8L,
+        "WGPUQuerySetDescriptorExtras",
+        32L, 8L,
         __kffiJvmStructFields107_0(),
     )
 }
 private fun __kffiJvmStructFields108_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("pipelineStatistics", JvmDowncallEngine.FieldKind.POINTER, 16L),
-    JvmDowncallEngine.StructField("pipelineStatisticCount", JvmDowncallEngine.FieldKind.UINT64, 24L),
+    JvmDowncallEngine.StructField("desiredMaximumFrameLatency", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
 )
 private fun __kffiJvmRegisterStructLayout108() {
     JvmDowncallEngine.registerStructLayout(
-        "WGPUQuerySetDescriptorExtras",
-        32L, 8L,
+        "WGPUSurfaceConfigurationExtras",
+        24L, 8L,
         __kffiJvmStructFields108_0(),
     )
 }
 private fun __kffiJvmStructFields109_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("desiredMaximumFrameLatency", JvmDowncallEngine.FieldKind.UINT32, 16L),
-    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+    JvmDowncallEngine.StructField("panelNative", JvmDowncallEngine.FieldKind.POINTER, 16L),
 )
 private fun __kffiJvmRegisterStructLayout109() {
     JvmDowncallEngine.registerStructLayout(
-        "WGPUSurfaceConfigurationExtras",
+        "WGPUSurfaceSourceSwapChainPanel",
         24L, 8L,
         __kffiJvmStructFields109_0(),
     )
 }
 private fun __kffiJvmStructFields110_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
     JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("panelNative", JvmDowncallEngine.FieldKind.POINTER, 16L),
+    JvmDowncallEngine.StructField("polygonMode", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("conservative", JvmDowncallEngine.FieldKind.UINT32, 20L),
 )
 private fun __kffiJvmRegisterStructLayout110() {
     JvmDowncallEngine.registerStructLayout(
-        "WGPUSurfaceSourceSwapChainPanel",
+        "WGPUPrimitiveStateExtras",
         24L, 8L,
         __kffiJvmStructFields110_0(),
     )
 }
 private fun __kffiJvmStructFields111_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
-    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
-    JvmDowncallEngine.StructField("polygonMode", JvmDowncallEngine.FieldKind.UINT32, 16L),
-    JvmDowncallEngine.StructField("conservative", JvmDowncallEngine.FieldKind.UINT32, 20L),
+    JvmDowncallEngine.StructField("aspect", JvmDowncallEngine.FieldKind.UINT32, 0L),
+    JvmDowncallEngine.StructField("baseMipLevel", JvmDowncallEngine.FieldKind.UINT32, 4L),
+    JvmDowncallEngine.StructField("mipLevelCount", JvmDowncallEngine.FieldKind.UINT32, 8L),
+    JvmDowncallEngine.StructField("baseArrayLayer", JvmDowncallEngine.FieldKind.UINT32, 12L),
+    JvmDowncallEngine.StructField("arrayLayerCount", JvmDowncallEngine.FieldKind.UINT32, 16L),
 )
 private fun __kffiJvmRegisterStructLayout111() {
     JvmDowncallEngine.registerStructLayout(
-        "WGPUPrimitiveStateExtras",
-        24L, 8L,
+        "WGPUImageSubresourceRange",
+        20L, 4L,
         __kffiJvmStructFields111_0(),
+    )
+}
+private fun __kffiJvmStructFields112_0(): kotlin.collections.List<JvmDowncallEngine.StructField> = listOf(
+    JvmDowncallEngine.StructField("WGPUChainedStruct", JvmDowncallEngine.FieldKind.STRUCT, 0L),
+    JvmDowncallEngine.StructField("samplerBorderColor", JvmDowncallEngine.FieldKind.UINT32, 16L),
+    JvmDowncallEngine.StructField("__pad", JvmDowncallEngine.FieldKind.PADDING, 4L),
+)
+private fun __kffiJvmRegisterStructLayout112() {
+    JvmDowncallEngine.registerStructLayout(
+        "WGPUSamplerDescriptorExtras",
+        24L, 8L,
+        __kffiJvmStructFields112_0(),
     )
 }
 private val __kffiJvmStructLayouts: Unit = run {
@@ -11657,5 +11753,6 @@ private val __kffiJvmStructLayouts: Unit = run {
     __kffiJvmRegisterStructLayout109()
     __kffiJvmRegisterStructLayout110()
     __kffiJvmRegisterStructLayout111()
+    __kffiJvmRegisterStructLayout112()
 }
 

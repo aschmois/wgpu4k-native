@@ -6701,6 +6701,22 @@ actual fun wgpuComputePassEncoderSetBindGroup(computePassEncoder: WGPUComputePas
     return
 }
 
+private val wgpuComputePassEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderSetImmediates") }
+actual fun wgpuComputePassEncoderSetImmediates(computePassEncoder: WGPUComputePassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    val argsAllocator = MemoryAllocator()
+    try {
+        val args = argsAllocator.allocateBuffer(32uL)
+        args.writeLong(computePassEncoder?.handler?.rawValue ?: 0L, 0uL)
+        args.writeInt(offset.toInt(), 8uL)
+        args.writeLong(data.toAddress(), 16uL)
+        args.writeLong(size.toLong(), 24uL)
+        NativeEngine.callGeneric(wgpuComputePassEncoderSetImmediates_ADDR, 4, "v:p,u32,p,u64", args.handler.rawValue, 0L)
+    } finally {
+        argsAllocator.close()
+    }
+    return
+}
+
 private val wgpuComputePassEncoderSetLabel_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderSetLabel") }
 actual fun wgpuComputePassEncoderSetLabel(computePassEncoder: WGPUComputePassEncoder?, label: WGPUStringView): Unit {
     val argsAllocator = MemoryAllocator()
@@ -7282,6 +7298,22 @@ actual fun wgpuRenderBundleEncoderSetBindGroup(renderBundleEncoder: WGPURenderBu
     return
 }
 
+private val wgpuRenderBundleEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetImmediates") }
+actual fun wgpuRenderBundleEncoderSetImmediates(renderBundleEncoder: WGPURenderBundleEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    val argsAllocator = MemoryAllocator()
+    try {
+        val args = argsAllocator.allocateBuffer(32uL)
+        args.writeLong(renderBundleEncoder?.handler?.rawValue ?: 0L, 0uL)
+        args.writeInt(offset.toInt(), 8uL)
+        args.writeLong(data.toAddress(), 16uL)
+        args.writeLong(size.toLong(), 24uL)
+        NativeEngine.callGeneric(wgpuRenderBundleEncoderSetImmediates_ADDR, 4, "v:p,u32,p,u64", args.handler.rawValue, 0L)
+    } finally {
+        argsAllocator.close()
+    }
+    return
+}
+
 private val wgpuRenderBundleEncoderSetIndexBuffer_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetIndexBuffer") }
 actual fun wgpuRenderBundleEncoderSetIndexBuffer(renderBundleEncoder: WGPURenderBundleEncoder?, buffer: WGPUBuffer?, format: WGPUIndexFormat, offset: ULong, size: ULong): Unit {
     NativeEngine.callV5PPILL(wgpuRenderBundleEncoderSetIndexBuffer_ADDR, renderBundleEncoder?.handler?.rawValue ?: 0L, buffer?.handler?.rawValue ?: 0L, format.toInt(), offset.toLong(), size.toLong())
@@ -7423,6 +7455,22 @@ actual fun wgpuRenderPassEncoderSetBindGroup(renderPassEncoder: WGPURenderPassEn
 private val wgpuRenderPassEncoderSetBlendConstant_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetBlendConstant") }
 actual fun wgpuRenderPassEncoderSetBlendConstant(renderPassEncoder: WGPURenderPassEncoder?, color: WGPUColor?): Unit {
     NativeEngine.callV2PP(wgpuRenderPassEncoderSetBlendConstant_ADDR, renderPassEncoder?.handler?.rawValue ?: 0L, color?.handler?.rawValue ?: 0L)
+    return
+}
+
+private val wgpuRenderPassEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetImmediates") }
+actual fun wgpuRenderPassEncoderSetImmediates(renderPassEncoder: WGPURenderPassEncoder?, offset: UInt, data: NativeAddress?, size: ULong): Unit {
+    val argsAllocator = MemoryAllocator()
+    try {
+        val args = argsAllocator.allocateBuffer(32uL)
+        args.writeLong(renderPassEncoder?.handler?.rawValue ?: 0L, 0uL)
+        args.writeInt(offset.toInt(), 8uL)
+        args.writeLong(data.toAddress(), 16uL)
+        args.writeLong(size.toLong(), 24uL)
+        NativeEngine.callGeneric(wgpuRenderPassEncoderSetImmediates_ADDR, 4, "v:p,u32,p,u64", args.handler.rawValue, 0L)
+    } finally {
+        argsAllocator.close()
+    }
     return
 }
 
@@ -8228,9 +8276,10 @@ actual interface WGPUDeviceExtras {
 
 actual interface WGPUNativeLimits {
     actual var chain: WGPUChainedStruct
-    actual var maxImmediateSize: UInt
     actual var maxNonSamplerBindings: UInt
     actual var maxBindingArrayElementsPerShaderStage: UInt
+    actual var maxBindingArraySamplerElementsPerShaderStage: UInt
+    actual var maxMultiviewViewCount: UInt
     actual val handler: NativeAddress
     actual companion object {
         actual operator fun invoke(address: NativeAddress): WGPUNativeLimits = ByReference(address)
@@ -8254,15 +8303,18 @@ actual interface WGPUNativeLimits {
                 MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
                 mem.writeBytes(bytes, 0u, 0uL, 16uL)
             }
-        override var maxImmediateSize: UInt
+        override var maxNonSamplerBindings: UInt
             get() = mem.readUInt(16uL)
             set(value) { mem.writeUInt(value, 16uL) }
-        override var maxNonSamplerBindings: UInt
+        override var maxBindingArrayElementsPerShaderStage: UInt
             get() = mem.readUInt(20uL)
             set(value) { mem.writeUInt(value, 20uL) }
-        override var maxBindingArrayElementsPerShaderStage: UInt
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
             get() = mem.readUInt(24uL)
             set(value) { mem.writeUInt(value, 24uL) }
+        override var maxMultiviewViewCount: UInt
+            get() = mem.readUInt(28uL)
+            set(value) { mem.writeUInt(value, 28uL) }
         override val handler: NativeAddress
             get() = handle
     }
@@ -8276,65 +8328,18 @@ actual interface WGPUNativeLimits {
                 MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
                 mem.writeBytes(bytes, 0u, 0uL, 16uL)
             }
-        override var maxImmediateSize: UInt
+        override var maxNonSamplerBindings: UInt
             get() = mem.readUInt(16uL)
             set(value) { mem.writeUInt(value, 16uL) }
-        override var maxNonSamplerBindings: UInt
+        override var maxBindingArrayElementsPerShaderStage: UInt
             get() = mem.readUInt(20uL)
             set(value) { mem.writeUInt(value, 20uL) }
-        override var maxBindingArrayElementsPerShaderStage: UInt
+        override var maxBindingArraySamplerElementsPerShaderStage: UInt
             get() = mem.readUInt(24uL)
             set(value) { mem.writeUInt(value, 24uL) }
-        override val handler: NativeAddress
-            get() = handle
-    }
-}
-
-actual interface WGPUPipelineLayoutExtras {
-    actual var chain: WGPUChainedStruct
-    actual var immediateDataSize: UInt
-    actual val handler: NativeAddress
-    actual companion object {
-        actual operator fun invoke(address: NativeAddress): WGPUPipelineLayoutExtras = ByReference(address)
-        actual fun allocate(allocator: MemoryAllocator): WGPUPipelineLayoutExtras = ByReference(allocator.allocateBuffer(24uL).handler)
-        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUPipelineLayoutExtras) -> Unit): ArrayHolder<WGPUPipelineLayoutExtras> {
-            val buffer = allocator.allocateBuffer(24uL * size)
-            val result = ArrayHolder<WGPUPipelineLayoutExtras>(buffer.handler)
-            repeat(size.toInt()) { index ->
-                provider(index.toUInt(), ByValue(NativeAddress(buffer.handler.rawValue + index.toLong() * 24L)))
-            }
-            return result
-        }
-    }
-    
-    class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutExtras {
-        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
-        override var chain: WGPUChainedStruct
-            get() = WGPUChainedStruct.ByValue(NativeAddress(handle.rawValue + 0L))
-            set(value) {
-                val bytes = ByteArray(16)
-                MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
-                mem.writeBytes(bytes, 0u, 0uL, 16uL)
-            }
-        override var immediateDataSize: UInt
-            get() = mem.readUInt(16uL)
-            set(value) { mem.writeUInt(value, 16uL) }
-        override val handler: NativeAddress
-            get() = handle
-    }
-    
-    class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUPipelineLayoutExtras {
-        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
-        override var chain: WGPUChainedStruct
-            get() = WGPUChainedStruct.ByValue(NativeAddress(handle.rawValue + 0L))
-            set(value) {
-                val bytes = ByteArray(16)
-                MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
-                mem.writeBytes(bytes, 0u, 0uL, 16uL)
-            }
-        override var immediateDataSize: UInt
-            get() = mem.readUInt(16uL)
-            set(value) { mem.writeUInt(value, 16uL) }
+        override var maxMultiviewViewCount: UInt
+            get() = mem.readUInt(28uL)
+            set(value) { mem.writeUInt(value, 28uL) }
         override val handler: NativeAddress
             get() = handle
     }
@@ -9322,6 +9327,119 @@ actual interface WGPUPrimitiveStateExtras {
     }
 }
 
+actual interface WGPUImageSubresourceRange {
+    actual var aspect: WGPUTextureAspect
+    actual var baseMipLevel: UInt
+    actual var mipLevelCount: UInt
+    actual var baseArrayLayer: UInt
+    actual var arrayLayerCount: UInt
+    actual val handler: NativeAddress
+    actual companion object {
+        actual operator fun invoke(address: NativeAddress): WGPUImageSubresourceRange = ByReference(address)
+        actual fun allocate(allocator: MemoryAllocator): WGPUImageSubresourceRange = ByReference(allocator.allocateBuffer(20uL).handler)
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUImageSubresourceRange) -> Unit): ArrayHolder<WGPUImageSubresourceRange> {
+            val buffer = allocator.allocateBuffer(20uL * size)
+            val result = ArrayHolder<WGPUImageSubresourceRange>(buffer.handler)
+            repeat(size.toInt()) { index ->
+                provider(index.toUInt(), ByValue(NativeAddress(buffer.handler.rawValue + index.toLong() * 20L)))
+            }
+            return result
+        }
+    }
+    
+    class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUImageSubresourceRange {
+        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 20uL) }
+        override var aspect: WGPUTextureAspect
+            get() = mem.readUInt(0uL) as WGPUTextureAspect
+            set(value) { mem.writeUInt(value.toUInt(), 0uL) }
+        override var baseMipLevel: UInt
+            get() = mem.readUInt(4uL)
+            set(value) { mem.writeUInt(value, 4uL) }
+        override var mipLevelCount: UInt
+            get() = mem.readUInt(8uL)
+            set(value) { mem.writeUInt(value, 8uL) }
+        override var baseArrayLayer: UInt
+            get() = mem.readUInt(12uL)
+            set(value) { mem.writeUInt(value, 12uL) }
+        override var arrayLayerCount: UInt
+            get() = mem.readUInt(16uL)
+            set(value) { mem.writeUInt(value, 16uL) }
+        override val handler: NativeAddress
+            get() = handle
+    }
+    
+    class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUImageSubresourceRange {
+        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 20uL) }
+        override var aspect: WGPUTextureAspect
+            get() = mem.readUInt(0uL) as WGPUTextureAspect
+            set(value) { mem.writeUInt(value.toUInt(), 0uL) }
+        override var baseMipLevel: UInt
+            get() = mem.readUInt(4uL)
+            set(value) { mem.writeUInt(value, 4uL) }
+        override var mipLevelCount: UInt
+            get() = mem.readUInt(8uL)
+            set(value) { mem.writeUInt(value, 8uL) }
+        override var baseArrayLayer: UInt
+            get() = mem.readUInt(12uL)
+            set(value) { mem.writeUInt(value, 12uL) }
+        override var arrayLayerCount: UInt
+            get() = mem.readUInt(16uL)
+            set(value) { mem.writeUInt(value, 16uL) }
+        override val handler: NativeAddress
+            get() = handle
+    }
+}
+
+actual interface WGPUSamplerDescriptorExtras {
+    actual var chain: WGPUChainedStruct
+    actual var samplerBorderColor: WGPUSamplerBorderColor
+    actual val handler: NativeAddress
+    actual companion object {
+        actual operator fun invoke(address: NativeAddress): WGPUSamplerDescriptorExtras = ByReference(address)
+        actual fun allocate(allocator: MemoryAllocator): WGPUSamplerDescriptorExtras = ByReference(allocator.allocateBuffer(24uL).handler)
+        actual fun allocateArray(allocator: MemoryAllocator, size: UInt, provider: (UInt, WGPUSamplerDescriptorExtras) -> Unit): ArrayHolder<WGPUSamplerDescriptorExtras> {
+            val buffer = allocator.allocateBuffer(24uL * size)
+            val result = ArrayHolder<WGPUSamplerDescriptorExtras>(buffer.handler)
+            repeat(size.toInt()) { index ->
+                provider(index.toUInt(), ByValue(NativeAddress(buffer.handler.rawValue + index.toLong() * 24L)))
+            }
+            return result
+        }
+    }
+    
+    class ByReference(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerDescriptorExtras {
+        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
+        override var chain: WGPUChainedStruct
+            get() = WGPUChainedStruct.ByValue(NativeAddress(handle.rawValue + 0L))
+            set(value) {
+                val bytes = ByteArray(16)
+                MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
+                mem.writeBytes(bytes, 0u, 0uL, 16uL)
+            }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = mem.readUInt(16uL) as WGPUSamplerBorderColor
+            set(value) { mem.writeUInt(value.toUInt(), 16uL) }
+        override val handler: NativeAddress
+            get() = handle
+    }
+    
+    class ByValue(val handle: NativeAddress = NativeAddress(0L)) : WGPUSamplerDescriptorExtras {
+        private val mem: MemoryBuffer by lazy { MemoryBuffer(handle, 24uL) }
+        override var chain: WGPUChainedStruct
+            get() = WGPUChainedStruct.ByValue(NativeAddress(handle.rawValue + 0L))
+            set(value) {
+                val bytes = ByteArray(16)
+                MemoryBuffer(value.handler, 16uL).readBytes(bytes, 0u, 0uL, 16uL)
+                mem.writeBytes(bytes, 0u, 0uL, 16uL)
+            }
+        override var samplerBorderColor: WGPUSamplerBorderColor
+            get() = mem.readUInt(16uL) as WGPUSamplerBorderColor
+            set(value) { mem.writeUInt(value.toUInt(), 16uL) }
+        override val handler: NativeAddress
+            get() = handle
+    }
+}
+
 private val wgpuGenerateReport_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuGenerateReport") }
 actual fun wgpuGenerateReport(instance: WGPUInstance?, report: WGPUGlobalReport?): Unit {
     NativeEngine.callV2PP(wgpuGenerateReport_ADDR, instance?.handler?.rawValue ?: 0L, report?.handler?.rawValue ?: 0L)
@@ -9383,24 +9501,6 @@ actual fun wgpuQueueGetNativeMetalCommandQueue(queue: WGPUQueue?): NativeAddress
 private val wgpuTextureGetNativeMetalTexture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuTextureGetNativeMetalTexture") }
 actual fun wgpuTextureGetNativeMetalTexture(texture: WGPUTexture?): NativeAddress? {
     return NativeEngine.callP1P(wgpuTextureGetNativeMetalTexture_ADDR, texture?.handler?.rawValue ?: 0L).takeIf { it != 0L }?.let(::NativeAddress)
-}
-
-private val wgpuRenderPassEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderSetImmediates") }
-actual fun wgpuRenderPassEncoderSetImmediates(encoder: WGPURenderPassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    NativeEngine.callV4PIIP(wgpuRenderPassEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data.toAddress())
-    return
-}
-
-private val wgpuComputePassEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuComputePassEncoderSetImmediates") }
-actual fun wgpuComputePassEncoderSetImmediates(encoder: WGPUComputePassEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    NativeEngine.callV4PIIP(wgpuComputePassEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data.toAddress())
-    return
-}
-
-private val wgpuRenderBundleEncoderSetImmediates_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderBundleEncoderSetImmediates") }
-actual fun wgpuRenderBundleEncoderSetImmediates(encoder: WGPURenderBundleEncoder?, offset: UInt, sizeBytes: UInt, data: NativeAddress?): Unit {
-    NativeEngine.callV4PIIP(wgpuRenderBundleEncoderSetImmediates_ADDR, encoder?.handler?.rawValue ?: 0L, offset.toInt(), sizeBytes.toInt(), data.toAddress())
-    return
 }
 
 private val wgpuRenderPassEncoderMultiDrawIndirect_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuRenderPassEncoderMultiDrawIndirect") }
@@ -9472,6 +9572,37 @@ private val wgpuDeviceStopGraphicsDebuggerCapture_ADDR: Long by lazy { KextractA
 actual fun wgpuDeviceStopGraphicsDebuggerCapture(device: WGPUDevice?): Unit {
     NativeEngine.callV1P(wgpuDeviceStopGraphicsDebuggerCapture_ADDR, device?.handler?.rawValue ?: 0L)
     return
+}
+
+private val wgpuCommandEncoderClearTexture_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuCommandEncoderClearTexture") }
+actual fun wgpuCommandEncoderClearTexture(commandEncoder: WGPUCommandEncoder?, texture: WGPUTexture?, range: WGPUImageSubresourceRange?): Unit {
+    val argsAllocator = MemoryAllocator()
+    try {
+        val args = argsAllocator.allocateBuffer(24uL)
+        args.writeLong(commandEncoder?.handler?.rawValue ?: 0L, 0uL)
+        args.writeLong(texture?.handler?.rawValue ?: 0L, 8uL)
+        args.writeLong(range?.handler?.rawValue ?: 0L, 16uL)
+        NativeEngine.callGeneric(wgpuCommandEncoderClearTexture_ADDR, 3, "v:p,p,p", args.handler.rawValue, 0L)
+    } finally {
+        argsAllocator.close()
+    }
+    return
+}
+
+private val wgpuDeviceCreateShaderModuleTrusted_ADDR: Long by lazy { KextractAndroidBootstrap.resolve("wgpuDeviceCreateShaderModuleTrusted") }
+actual fun wgpuDeviceCreateShaderModuleTrusted(device: WGPUDevice?, descriptor: WGPUShaderModuleDescriptor?, runtimeChecks: ULong): WGPUShaderModule? {
+    val argsAllocator = MemoryAllocator()
+    try {
+        val args = argsAllocator.allocateBuffer(24uL)
+        args.writeLong(device?.handler?.rawValue ?: 0L, 0uL)
+        args.writeLong(descriptor?.handler?.rawValue ?: 0L, 8uL)
+        args.writeLong(runtimeChecks.toLong(), 16uL)
+        val out = argsAllocator.allocateBuffer(8uL)
+        NativeEngine.callGeneric(wgpuDeviceCreateShaderModuleTrusted_ADDR, 3, "p:p,p,u64", args.handler.rawValue, out.handler.rawValue)
+        return out.readLong(0uL).takeIf { it != 0L }?.let(::NativeAddress)?.let(::WGPUShaderModule)
+    } finally {
+        argsAllocator.close()
+    }
 }
 
 @OptIn(CallbackRuntimeApi::class)
